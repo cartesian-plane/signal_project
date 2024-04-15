@@ -7,7 +7,7 @@ public class AlertGenerator implements PatientDataGenerator {
 
     public static final Random randomGenerator = new Random();
 
-    //AlertStates was renamed to alertStates because local variable names should be written in lowerCamelCase (5.2.7 Google Java Style Guide)
+    // AlertStates was renamed to alertStates because local variable names should be written in lowerCamelCase (5.2.7 Google Java Style Guide)
     private boolean[] alertStates; // false = resolved, true = pressed
 
     public AlertGenerator(int patientCount) {
@@ -25,7 +25,7 @@ public class AlertGenerator implements PatientDataGenerator {
                      "Alert", "resolved");
                 }
             } else {
-                //Lambda was renamed to lambda because local variable names should be written in lowerCamelCase
+                // Lambda was renamed to lambda because local variable names should be written in lowerCamelCase
                 // (5.2.7 Google Java Style Guide)
                 // Average rate (alerts per period), adjust based on desired frequency
                 double lambda = 0.1; 
