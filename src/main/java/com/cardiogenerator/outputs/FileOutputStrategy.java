@@ -31,8 +31,10 @@ public class FileOutputStrategy implements OutputStrategy {
         }
         // Set the filePath variable
         // Changed variable name to lowerCamelCase
-        String filePath = fileMap.computeIfAbsent(label, k -> Paths.get(baseDirectory, label + ".txt").toString());
+        String filePath = fileMap.computeIfAbsent(label, k -> Paths.get(baseDirectory, label
+                + ".txt").toString());
 
+        // Wrap line at 100 characters
         // Write the data to the file
         try (PrintWriter out = new PrintWriter(
                 Files.newBufferedWriter(Paths.get(filePath), StandardOpenOption.CREATE, StandardOpenOption.APPEND))) {
