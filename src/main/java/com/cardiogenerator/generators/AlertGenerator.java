@@ -1,13 +1,17 @@
 package com.cardiogenerator.generators; // package name contained underscores. It cannot contain
 // underscores (5.2.1).
 
-// The imports were separated by a space, which is wrong. All imports (non-static) 
-// must be placed in a single block with no spaces in-between (3.3.3).
+// The imports were separated by a space, which is wrong. All imports 
+// must have no spaces in-between (3.3.3).
 // Imports' names are not in ASCII sort order. All imports' names within a block
 // must be in ASCII sort order (3.3.3).
 import com.cardiogenerator.outputs.OutputStrategy;
 import java.util.Random;
 
+/**
+ * AlertGenerator generates alert data for patients and handles the resolution 
+ * of alerts based on a probability distribution.
+ */
 public class AlertGenerator implements PatientDataGenerator {
 
     public static final Random randomGenerator = new Random();
@@ -20,6 +24,12 @@ public class AlertGenerator implements PatientDataGenerator {
         alertStates = new boolean[patientCount + 1];
     }
 
+     /**
+     * Generates alert data for a specific patient and outputs it.
+     *
+     * @param patientId the ID of the patient
+     * @param outputStrategy the output strategy to use for displaying the alert data
+     */
     @Override
     public void generate(int patientId, OutputStrategy outputStrategy) {
         try {
@@ -28,7 +38,7 @@ public class AlertGenerator implements PatientDataGenerator {
                     alertStates[patientId] = false;
                     // Output the alert
                     outputStrategy.output(patientId, System.currentTimeMillis(),
-                     "Alert", "resolved");
+                     "Alert", "resolved"); // Line wrapped to not exceed 100 characters (4.4)
                 }
             } else {
                 // Lambda was renamed to lambda because local variable names 
@@ -44,12 +54,12 @@ public class AlertGenerator implements PatientDataGenerator {
                     alertStates[patientId] = true;
                     // Output the alert
                     outputStrategy.output(patientId, System.currentTimeMillis(),
-                     "Alert", "triggered");
+                     "Alert", "triggered"); // Line wrapped to not exceed 100 characters (4.4)
                 }
             }
         } catch (Exception e) {
             System.err.println("An error occurred while generating alert data for patient "
-             + patientId);
+             + patientId); // Line wrapped to not exceed 100 characters (4.4)
             e.printStackTrace();
         }
     }
