@@ -7,6 +7,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.concurrent.ConcurrentHashMap;
 
+/** Strategy used by the strategy pattern. */
 public class FileOutputStrategy implements OutputStrategy {
 
     // Changed variable name to lowerCamelCase
@@ -20,6 +21,18 @@ public class FileOutputStrategy implements OutputStrategy {
         this.baseDirectory = baseDirectory;
     }
 
+    /**
+     * Writes patient data to a file in the {@code baseDirectory} specified by the user.
+     *
+     * <p>If a directory cannot be created, it will throw an error.</p>
+     *
+     * <p>The data format is: patientID, timestamp, Label, Data</p>
+     *
+     * @param patientId the id of the patient
+     * @param timestamp the timestamp of the data
+     * @param label the type of data (could come from any generator)
+     * @param data the data to be written (could come from any generator)
+     */
     @Override
     public void output(int patientId, long timestamp, String label, String data) {
         try {
