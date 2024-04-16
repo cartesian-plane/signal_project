@@ -144,7 +144,13 @@ public class HealthDataSimulator {
                         " clients connected to port 8080.");
     }
 
-    /** Initializes a list of patients, based on the patient count. */
+    /**
+     * Initializes a list based on the patient count.
+     * The patient count has to be greater than or equal to 1.
+     *
+     * @param patientCount number of patients
+     * @return list of patient Ids
+     */
     private static List<Integer> initializePatientIds(int patientCount) {
         List<Integer> patientIds = new ArrayList<>();
         for (int i = 1; i <= patientCount; i++) {
