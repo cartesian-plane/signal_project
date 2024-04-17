@@ -166,13 +166,13 @@ public class HealthDataSimulator {
     /**
      * Schedules tasks that generate patient data at fixed intervals
      *
-     * <p>Instantiates all the data generators, and then tasks a task is scheduled to run for each
+     * <p>Instantiates all the data generators, and then a task is scheduled to run for each
      * type of data.</p>
      *
      * <p>To simulate real data, some tasks are run more frequently than others
      * (i.e. {@link ECGDataGenerator}: 1/s, {@link AlertGenerator}: 1/20s</p>
      *
-     * <p>Generated data is passed to the output strategy set by the user</p>
+     * <p>Generated data is passed to the output strategy set by the user.</p>
      *
      * @param patientIds list of patients to generate data for
      */
