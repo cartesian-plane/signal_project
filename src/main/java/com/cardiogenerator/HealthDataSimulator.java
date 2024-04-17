@@ -146,6 +146,7 @@ public class HealthDataSimulator {
 
     /**
      * Initializes a list based on the patient count.
+     * Patients are indexed from 1 onward.
      * The patient count has to be greater than or equal to 1.
      *
      * @param patientCount number of patients
