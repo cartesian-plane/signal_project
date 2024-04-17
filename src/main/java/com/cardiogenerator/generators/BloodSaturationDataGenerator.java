@@ -15,6 +15,11 @@ public class BloodSaturationDataGenerator implements PatientDataGenerator {
 
     private int[] lastSaturationValues;
 
+    /**
+     * Constructs a BloodSaturationDataGenerator object with a specified number of patients.
+     *
+     * @param patientCount The total number of patients for which blood saturation data is generated.
+     */
     public BloodSaturationDataGenerator(int patientCount) {
         lastSaturationValues = new int[patientCount + 1];
 
