@@ -11,6 +11,8 @@ import java.util.Random;
 /**
  * AlertGenerator generates alert data for patients and handles the resolution 
  * of alerts based on a probability distribution.
+ * 
+ * Indexing of patients starts from 1. 
  */
 public class AlertGenerator implements PatientDataGenerator {
 
