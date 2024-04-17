@@ -29,6 +29,9 @@ import java.util.ArrayList;
  * Simulates health data using pseudorandom generation.
  * The user can pass several arguments, as documented in the README.md
  *
+ * <p>Patients are indexed from 1 onward, and the list is randomly shuffled,
+ * to simulate data diversity.</p>
+ *
  * <p>Supports multiple types of output, via the strategy pattern
  * provided by {@link OutputStrategy} </p>
  *
