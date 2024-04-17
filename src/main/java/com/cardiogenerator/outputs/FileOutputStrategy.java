@@ -26,6 +26,9 @@ public class FileOutputStrategy implements OutputStrategy {
      *
      * <p>If a directory cannot be created, it will throw an error.</p>
      *
+     * <p>Every type of data will be stored in its own file (i.e. cholesterol.txt).
+     * If such a file does not exist, one will be created.</p>
+     *
      * <p>The data format is: patientID, timestamp, Label, Data</p>
      *
      * @param patientId the id of the patient
