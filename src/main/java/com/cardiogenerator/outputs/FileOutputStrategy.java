@@ -30,7 +30,7 @@ public class FileOutputStrategy implements OutputStrategy {
      *
      * @param patientId the id of the patient
      * @param timestamp the timestamp of the data
-     * @param label the type of data (could come from any generator)
+     * @param label the type of data (i.e. DiastolicPressure, Cholesterol)
      * @param data the data to be written (could come from any generator)
      */
     @Override
