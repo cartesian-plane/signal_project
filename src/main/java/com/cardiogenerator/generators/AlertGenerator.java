@@ -20,6 +20,11 @@ public class AlertGenerator implements PatientDataGenerator {
     // names should be written in lowerCamelCase (5.2.7)
     private boolean[] alertStates; // false = resolved, true = pressed
 
+    /**
+     * Constructs an AlertGenerator object with a specified number of patients.
+     *
+     * @param patientCount The total number of patients for which alerts are to be generated.
+     */
     public AlertGenerator(int patientCount) {
         alertStates = new boolean[patientCount + 1];
     }
