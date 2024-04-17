@@ -39,6 +39,8 @@ public class TcpOutputStrategy implements OutputStrategy {
     /**
      * Outputs data to the connected client.
      *
+     * <p>Data is sent to the PrintWriter, which is initialized with the client's output stream.</p>
+     *
      * @param patientId the ID of the patient associated with the data
      * @param timestamp the timestamp of the data
      * @param label the label associated with the data
