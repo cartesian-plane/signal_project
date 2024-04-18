@@ -1,4 +1,7 @@
 @startuml
+
+HealthDataSimulator o-- OutputStrategy
+
 class HealthDataSimulator {
     - patientCount : Integer {static}
     - scheduler : ScheduledExecutorService {static}
@@ -12,4 +15,11 @@ class HealthDataSimulator {
 
 
 }
+
+interface OutputStrategy {
+    + output(patientId : Integer, timestamp : long, label : String, data : String) : void
+}
+
+
+
 @enduml
