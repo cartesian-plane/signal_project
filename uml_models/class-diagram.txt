@@ -3,6 +3,7 @@
 skinparam dpi 300
 
 HealthDataSimulator *-- OutputStrategy: uses 1 >
+HealthDataSimulator *-- PatientDataGenerator: uses 5 >
 
 class HealthDataSimulator {
     - patientCount: Integer {static}
@@ -17,6 +18,43 @@ class HealthDataSimulator {
 
 
 }
+
+interface PatientDataGenerator {
+    + generate(patientId: Integer, outputStrategy: OutputStrategy): void
+}
+note left of PatientDataGenerator: All arrays are filled randomly
+
+
+class AlertGenerator {
+    - alertStates: boolean[]
+
+}
+
+class BloodLevelsDataGenerator {
+    - baselineCholesterol: double[]
+    - baselineWhiteCells: double[]
+    - baselineRedCells: double[]
+}
+
+class BloodPressureDataGenerator {
+    - lastSystolicValues: int[]
+    - lastDiastolicValues: int[]
+}
+
+class BloodSaturationDataGenerator {
+    - lastSaturationValues: int[]
+}
+
+class ECGDataGenerator {
+    -lastEcgValues: double[]
+}
+
+
+class AlertGenerator implements PatientDataGenerator
+class BloodLevelsDataGenerator implements PatientDataGenerator
+class BloodPressureDataGenerator implements PatientDataGenerator
+class BloodSaturationDataGenerator implements PatientDataGenerator
+class ECGDataGenerator implements PatientDataGenerator
 
 interface OutputStrategy {
     + output(patientId: Integer, timestamp: long, label: String, data: String): void
