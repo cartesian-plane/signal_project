@@ -2,24 +2,24 @@
 
 skinparam dpi 300
 
-HealthDataSimulator *-- OutputStrategy : uses 1 >
+HealthDataSimulator *-- OutputStrategy: uses 1 >
 
 class HealthDataSimulator {
-    - patientCount : Integer {static}
-    - scheduler : ScheduledExecutorService {static}
-    - outputStrategy : OutputStrategy {static}
-    - random : Random {static}
+    - patientCount: Integer {static}
+    - scheduler: ScheduledExecutorService {static}
+    - outputStrategy: OutputStrategy {static}
+    - random: Random {static}
 
-    - parseArguments(args : String[]) : void {static}
-    - printHelp() : void {static}
-    - initializePatientIds(patientCount : Integer) : List<Integer> {static}
-    - scheduleTasksForPatients(patientIds : List<Integer>) : void {static}
+    - parseArguments(args: String[]): void {static}
+    - printHelp(): void {static}
+    - initializePatientIds(patientCount: Integer): List<Integer> {static}
+    - scheduleTasksForPatients(patientIds: List<Integer>): void {static}
 
 
 }
 
 interface OutputStrategy {
-    + output(patientId : Integer, timestamp : long, label : String, data : String) : void
+    + output(patientId: Integer, timestamp: long, label: String, data: String): void
 }
 
 class ConsoleOutputStrategy {
@@ -27,21 +27,21 @@ class ConsoleOutputStrategy {
 }
 
 class FileOutputStrategy {
-    - baseDirectory : String
-    - fileMap : ConcurrentHashMap
+    - baseDirectory: String
+    - fileMap: ConcurrentHashMap
 
 }
 
 
 
 class TcpOutputStrategy {
-    - serverSocket : ServerSocket
-    - clientSocket : Socket
-    - out : PrintWriter
+    - serverSocket: ServerSocket
+    - clientSocket: Socket
+    - out: PrintWriter
 }
 
 class WebsocketOutputStrategy {
-    - server : WebSocketServer
+    - server: WebSocketServer
 }
 
 class FileOutputStrategy implements OutputStrategy
