@@ -84,7 +84,7 @@ public class HealthDataSimulator {
                     if (i + 1 < args.length) {
                         String outputArg = args[++i];
                         if (outputArg.equals("console")) {
-                            outputStrategy = new ConsoleOutputStrategy();
+                          outputStrategy = new ConsoleOutputStrategy();
                         } else if (outputArg.startsWith("file:")) {
                             String baseDirectory = outputArg.substring(5);
                             Path outputPath = Paths.get(baseDirectory);
