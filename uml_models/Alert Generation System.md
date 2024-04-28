@@ -1,6 +1,7 @@
 # Alert Generation System
 
-The **AlertGenerator** (add link here) integrates information from the data generators and the 
+The [AlertGenerator](https://github.com/cartesian-plane/signal_project/blob/master/src/main/java/com/cardiogenerator/generators/AlertGenerator.java)
+integrates information from the data generators and the 
 storage system, triggering alerts based on each patient's thresholds.
 
 The following information is used:
