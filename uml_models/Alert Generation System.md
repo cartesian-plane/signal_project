@@ -7,6 +7,9 @@ The following information is used:
 * Patient thresholds (retrieved from the Data Storage System, in the form of a DTO)
 * Real-time data form the patient monitoring system
 
+Prior to retrieving information from the Data Storage system, the request is passed through the 
+Patient Identification system, to match the PatientId with the appropriate  record.
+
 This information is continuously evaluated via the *evaluateData()* method, which will trigger 
 an alert if the conditions are met (some data crosses a threshold).
 
