@@ -1,6 +1,6 @@
 # Data Storage System
 
-The **Data Storage System** (add link here) is responsible for all operations regarding 
+The **Data Storage System** is responsible for all operations regarding 
 stored patient data.
 
 As updating the Patient records database is relatively simple, the diagram centers around the 
