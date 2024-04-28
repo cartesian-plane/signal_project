@@ -63,6 +63,7 @@ java -jar target/target/cardio_generator-1.0-SNAPSHOT.jar --patient-count 100 --
 Student ID: 6367679
 Student ID: 6342904
 
+[UML Diagrams](https://github.com/cartesian-plane/signal_project/tree/master/uml_models)
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
