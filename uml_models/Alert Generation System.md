@@ -26,3 +26,7 @@ to the **Alert Manager** is not relevant for the diagram, it was not shown.
 The **Alert Manager** uses a Strategy pattern for the dispatch of alerts.
 The alert is evaluated via the *evaluateAlert()* method, and the appropriate Strategy is set, 
 to be used by the *dispatchAlert() method*.
+
+## Notes
+
+- **DTO**: Data Transfer Object. (https://en.wikipedia.org/wiki/Data_transfer_object)
