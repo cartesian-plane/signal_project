@@ -29,7 +29,7 @@ class ReaderTest {
 
       // the expected values were manually copied from the text file
       var firstPatientRecord = dataStorage.getRecords(15, 1,
-          1715519279865L).getFirst();
+          1715519279865L).get(0);
       var expectedFirstPatientRecord = new PatientRecord(15,
           4.641559693126796, "RedBloodCells", 1715519279864L);
       // if the 2 records match, then the parsing and transfer is done correctly
@@ -37,7 +37,7 @@ class ReaderTest {
       assertEquals(expectedFirstPatientRecord, firstPatientRecord);
 
       var secondPatientRecord = dataStorage.getRecords(62, 0,
-          1715519279864L).getFirst();
+          1715519279864L).get(0);
       var expectedSecondPatientRecord = new PatientRecord(62,
           5.757744563214141, "RedBloodCells", 1715519279864L);
 
