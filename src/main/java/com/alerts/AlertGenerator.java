@@ -63,14 +63,17 @@ public class AlertGenerator {
     }
 
   /**
-   * Returns an {@link Alert}when the BloodPressureData Alert conditions are met.
-   * If the conditions are not met, the return type is {@code null}
+   * Returns an {@link Alert} when the BloodPressureData Alert conditions are met.
+   * The patient records considered are the ones within the last 10 minutes.
+   *
+   * <p>If the conditions are not met, the return type is {@code null}.</p>
    *
    * @param patient patient to check
    * @return {@code Alert} if necessary, {@code null} otherwise
    */
   private Alert bloodPressureAlert(Patient patient) {
-      List<PatientRecord> records = dataStorage.getRecords(patient.getId(), 0, Long.MAX_VALUE);
+      List<PatientRecord> records = dataStorage.getRecords(patient.getId(),
+          System.currentTimeMillis() - (10 * 60 * 1000), Long.MAX_VALUE);
 
       for (int i = 2; i < records.size(); i++) {
         PatientRecord record1 = records.get(i - 2);
@@ -78,12 +81,12 @@ public class AlertGenerator {
         PatientRecord record3 = records.get(i);
 
         if (record1.recordType().equalsIgnoreCase("DiastolicPressure")) {
-          if (exceedsThreshold(60, 120, record1.measurementValue())) {
+          if (exceedsThresholds(60, 120, record1.measurementValue())) {
             return new Alert(String.valueOf(patient.getId()),
                 "CRITICAL: DIASTOLIC PRESSURE", record1.timestamp());
           }
         } else if (record1.recordType().equalsIgnoreCase("SystolicPressure")) {
-          if (exceedsThreshold(90, 180, record1.measurementValue())) {
+          if (exceedsThresholds(90, 180, record1.measurementValue())) {
             return new Alert(String.valueOf(patient.getId()),
                 "CRITICAL: SYSTOLIC PRESSURE", record1.timestamp());
           }
@@ -139,10 +142,11 @@ public class AlertGenerator {
       */
     private Alert bloodSaturationAlert(Patient patient){
       // Get all blood oxygen saturation records for the patient
-    List<PatientRecord> saturationRecords = patient.getRecords(System.currentTimeMillis() - (10 * 60 * 1000), System.currentTimeMillis())
+    List<PatientRecord> saturationRecords = patient.getRecords(System.currentTimeMillis()
+            - (10 * 60 * 1000), System.currentTimeMillis())
             .stream()
             .filter(record -> record.recordType().equals("BloodSaturation"))
-            .collect(Collectors.toList());
+            .toList();
 
     if (saturationRecords.isEmpty()) {
         // No records found within the last 10 minutes
@@ -176,6 +180,41 @@ public class AlertGenerator {
     }
 
   /**
+   * Returns an {@link Alert} when the Hypotensive Hypoxemia Alert conditions are met.
+   * The patient records considered are the ones within the last 10 minutes.
+   *
+   * <p>If the conditions are not met, the return type is {@code null}.</p>
+   *
+   * @param patient patient to check
+   * @return {@code Alert} if necessary, {@code null} otherwise
+   */
+  private Alert hypotensiveHypoxemiaAlert(Patient patient) {
+      List<PatientRecord> bloodPressureRecords = patient.getRecords(System.currentTimeMillis()
+              - (10 * 60 * 1000), System.currentTimeMillis())
+          .stream()
+          .filter(record -> record.recordType().equals("BloodPressure"))
+          .toList();
+
+      List<PatientRecord> saturationRecords = patient.getRecords(System.currentTimeMillis()
+              - (10 * 60 * 1000), System.currentTimeMillis())
+          .stream()
+          .filter(record -> record.recordType().equals("Saturation"))
+          .toList();
+
+
+      for (PatientRecord pressureRecord : bloodPressureRecords) {
+        for (PatientRecord oxygenRecord : saturationRecords) {
+          if (Math.abs(pressureRecord.timestamp() - oxygenRecord.timestamp()) <= 10 * 60 * 1000) {
+            return new Alert(String.valueOf(patient.getId()), "HYPOTENSIVE HYPOXEMIA"
+                + " ALERT", Math.max(pressureRecord.timestamp(), oxygenRecord.timestamp()));
+          }
+        }
+      }
+
+      return null;
+    }
+
+  /**
    * Checks if a value exceeds a given threshold (endpoints included).
    *
    * @param min the minimum value
@@ -183,7 +222,7 @@ public class AlertGenerator {
    * @param value the value to check
    * @return {@code true} if within exceeds, {@code false} if otherwise
    */
-  private boolean exceedsThreshold(double min, double max, double value) {
+  private boolean exceedsThresholds(double min, double max, double value) {
     if (min >= max) {
       throw new IllegalArgumentException("Min should be strictly less than Max");
     }
