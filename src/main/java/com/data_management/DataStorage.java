@@ -24,19 +24,18 @@ public class DataStorage {
     }
 
     /**
-     * Adds or updates patient data in the storage.
-     * If the patient does not exist, a new Patient object is created and added to
-     * the storage.
-     * Otherwise, the new data is added to the existing patient's records.
+     * Adds or updates patient data in the storage. If the patient does not exist, a new Patient
+     * object is created and added to the storage. Otherwise, the new data is added to the existing
+     * patient's records.
      *
      * @param patientId        the unique identifier of the patient
+     * @param timestamp        the time at which the measurement was taken, in milliseconds since the
+     *                         Unix epoch
+     * @param recordType       the type of record, e.g., "HeartRate", "BloodPressure"
      * @param measurementValue the value of the health metric being recorded
-     * @param recordType       the type of record, e.g., "HeartRate",
-     *                         "BloodPressure"
-     * @param timestamp        the time at which the measurement was taken, in
-     *                         milliseconds since the Unix epoch
      */
-    public void addPatientData(int patientId, double measurementValue, String recordType, long timestamp) {
+    public void addPatientData(int patientId, long timestamp, String recordType,
+        double measurementValue) {
         Patient patient = patientMap.get(patientId);
         if (patient == null) {
             patient = new Patient(patientId);
