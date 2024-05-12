@@ -94,10 +94,10 @@ public class DataStorage {
         // Example of using DataStorage to retrieve and print records for a patient
         List<PatientRecord> records = storage.getRecords(1, 1700000000000L, 1800000000000L);
         for (PatientRecord record : records) {
-            System.out.println("Record for Patient ID: " + record.getPatientId() +
-                    ", Type: " + record.getRecordType() +
-                    ", Data: " + record.getMeasurementValue() +
-                    ", Timestamp: " + record.getTimestamp());
+            System.out.println("Record for Patient ID: " + record.patientId() +
+                    ", Type: " + record.recordType() +
+                    ", Data: " + record.measurementValue() +
+                    ", Timestamp: " + record.timestamp());
         }
 
         // Initialize the AlertGenerator with the storage
