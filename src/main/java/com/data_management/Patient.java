@@ -47,7 +47,6 @@ public class Patient {
    * @return a list of PatientRecord objects that fall within the specified time range
    */
   public List<PatientRecord> getRecords(long startTime, long endTime) {
-    // TODO Implement and test this method
     return patientRecords.stream()
         .filter(record -> record.timestamp() >= startTime && record.timestamp() <= endTime)
         .collect(Collectors.toList());
