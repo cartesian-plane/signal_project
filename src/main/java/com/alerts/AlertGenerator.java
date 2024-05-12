@@ -4,6 +4,7 @@ import com.data_management.DataStorage;
 import com.data_management.Patient;
 import com.data_management.PatientRecord;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * The {@code AlertGenerator} class is responsible for monitoring patient data
@@ -122,6 +123,56 @@ public class AlertGenerator {
       }
 
       return null;
+    }
+     /**
+      *Checks for blood oxygen saturation alerts for the specified patient within the last 10 minutes.
+      * Alerts are triggered based on the following conditions:
+      * <ul>
+      *   <li>Low Saturation Alert: Triggered if the blood oxygen saturation level falls below 92%.</li>
+      *   <li>Rapid Drop Alert: Triggered if the blood oxygen saturation level drops by 5% or more
+      *       within a 10-minute interval.</li>
+      * </ul>
+      *
+      * @param patient the patient for whom to check for blood oxygen saturation alerts
+      * @return a string message indicating the type of alert triggered, or {@code null} if no alerts
+      *         are triggered within the specified time range
+      */
+    private Alert bloodSaturationAlert(Patient patient){
+      // Get all blood oxygen saturation records for the patient
+    List<PatientRecord> saturationRecords = patient.getRecords(System.currentTimeMillis() - (10 * 60 * 1000), System.currentTimeMillis())
+            .stream()
+            .filter(record -> record.recordType().equals("BloodSaturation"))
+            .collect(Collectors.toList());
+
+    if (saturationRecords.isEmpty()) {
+        // No records found within the last 10 minutes
+        return null;
+    }
+
+    // Get the latest blood saturation record
+    PatientRecord latestRecord = saturationRecords.get(0);
+
+    // Check if the latest saturation is below 92%
+    if (latestRecord.measurementValue() < 92) {
+        return new Alert(String.valueOf(patient.getId()),"Low Saturation Alert", latestRecord.timestamp());
+    }
+
+    // Check for rapid drop within a 10-minute interval
+    for (int i = 1; i < saturationRecords.size(); i++) {
+        PatientRecord prevRecord = saturationRecords.get(i);
+        if ((latestRecord.timestamp() - prevRecord.timestamp()) <= (10 * 60 * 1000)) {
+            double drop = latestRecord.measurementValue() - prevRecord.measurementValue();
+            if (drop >= 5) {
+              return new Alert(String.valueOf(patient.getId()),"Low Saturation Alert", latestRecord.timestamp());
+            }
+        } else {
+            // No more records within the 10-minute interval
+            break;
+        }
+    }
+
+    // No alerts triggered
+    return null;
     }
 
   /**
