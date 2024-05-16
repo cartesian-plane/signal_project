@@ -15,6 +15,8 @@ import com.cardiogenerator.outputs.FileOutputStrategy;
 import com.cardiogenerator.outputs.OutputStrategy;
 import com.cardiogenerator.outputs.TcpOutputStrategy;
 import com.cardiogenerator.outputs.WebSocketOutputStrategy;
+import com.data_management.Patient;
+import com.data_management.PatientRecord;
 
 import java.util.Collections;
 import java.util.List;
@@ -204,5 +206,19 @@ public class HealthDataSimulator {
     /** Helper method to schedule a task. */
     private static void scheduleTask(Runnable task, long period, TimeUnit timeUnit) {
         scheduler.scheduleAtFixedRate(task, random.nextInt(5), period, timeUnit);
+    }
+
+    private static void triggeredAlert(Patient patient) {
+        // Gets the medical records of the patient
+        List<PatientRecord> records = patient.getRecords(System.currentTimeMillis() - 60000, System.currentTimeMillis());
+
+        // Check if any of the records indicate an alert
+        for (PatientRecord record : records) {
+            if (record.recordType().equals("Alert")) {
+                // If an alert record is found, handle the triggered alert here
+                System.out.println("Triggered Alert for Patient ID: " + patient.getId());
+                break;
+            }
+        }
     }
 }
