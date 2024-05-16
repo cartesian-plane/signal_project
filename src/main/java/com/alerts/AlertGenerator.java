@@ -4,6 +4,7 @@ import com.data_management.DataStorage;
 import com.data_management.Patient;
 import com.data_management.PatientRecord;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -34,12 +35,22 @@ public class AlertGenerator {
    * @param patient the patient data to evaluate for alert conditions
    */
   public void evaluateData(Patient patient) {
-    // Implementation goes here
-    Alert alert;
 
-    alert = bloodPressureAlert(patient);
-    if (alert != null) {
-      triggerAlert(alert);
+    // make a list of all the alert methods, to iterate through them
+    List<Function<Patient, Alert>> alertChecks = List.of(
+        this::bloodPressureAlert,
+        this::bloodSaturationAlert,
+        this::hypotensiveHypoxemiaAlert,
+        this::ecgAlert
+    );
+
+    // iterate through the alert methods, triggering an alert if necessary
+    Alert alert;
+    for (Function<Patient, Alert> alertCheck : alertChecks) {
+      alert = alertCheck.apply(patient);
+      if (alert != null) {
+        triggerAlert(alert);
+      }
     }
 
 
