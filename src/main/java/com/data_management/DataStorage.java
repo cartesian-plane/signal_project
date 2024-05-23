@@ -44,23 +44,38 @@ public class DataStorage {
         patient.addRecord(measurementValue, recordType, timestamp);
     }
 
-    /**
-     * Retrieves a list of PatientRecord objects for a specific patient, filtered by
-     * a time range.
-     *
-     * @param patientId the unique identifier of the patient whose records are to be
-     *                  retrieved
-     * @param startTime the start of the time range, in milliseconds since the Unix
-     *                  epoch
-     * @param endTime   the end of the time range, in milliseconds since the Unix
-     *                  epoch
-     * @return a list of PatientRecord objects that fall within the specified time
-     *         range
-     */
-    public List<PatientRecord> getRecords(int patientId, long startTime, long endTime) {
+  /**
+   * Retrieves a list of PatientRecord objects for a specific patient, filtered by
+   * a time range.
+   *
+   * @param patientId the unique identifier of the patient whose records are to be
+   *                  retrieved
+   * @param startTime the start of the time range, in milliseconds since the Unix
+   *                  epoch
+   * @param endTime   the end of the time range, in milliseconds since the Unix
+   *                  epoch
+   * @return a list of PatientRecord objects that fall within the specified time
+   *         range
+   */
+  public List<PatientRecord> getRecords(int patientId, long startTime, long endTime) {
+    Patient patient = patientMap.get(patientId);
+    if (patient != null) {
+      return patient.getRecords(startTime, endTime);
+    }
+    return new ArrayList<>();
+  }
+
+  /**
+   * <p>Retrieves a complete list of PatientRecord objects for a specific patient
+   * (not filtered for a time range).</p>
+   *
+   * @param patientId the unique identifier of the patient whose records are to be retrieved
+   * @return a list of PatientRecord objects that fall within the specified time range
+   */
+    public List<PatientRecord> getRecords(int patientId) {
         Patient patient = patientMap.get(patientId);
         if (patient != null) {
-            return patient.getRecords(startTime, endTime);
+            return patient.getRecords();
         }
         return new ArrayList<>(); // return an empty list if no patient is found
     }
@@ -78,7 +93,7 @@ public class DataStorage {
      * The main method for the DataStorage class.
      * Initializes the system, reads data into storage, and continuously monitors
      * and evaluates patient data.
-     * 
+     *
      * @param args command line arguments
      */
     public static void main(String[] args) {
