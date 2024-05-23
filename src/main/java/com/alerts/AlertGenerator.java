@@ -114,8 +114,13 @@ public class AlertGenerator {
         if (Math.abs(change1) > 10 &&
             Math.abs(change2) > 10 &&
             Math.signum(change1) == Math.signum(change2)) {
-          return new Alert("TREND: DIASTOLIC PRESSURE",
-              String.valueOf(patient.getId()), record1.timestamp());
+          if (Math.signum(change1) > 0) {
+            return new Alert(String.valueOf(patient.getId()),
+                "TREND: INCREASING DIASTOLIC PRESSURE", record1.timestamp());
+          } else {
+            return new Alert(String.valueOf(patient.getId()),
+                "TREND: DECREASING DIASTOLIC PRESSURE", record1.timestamp());
+          }
         }
       }
 
@@ -130,8 +135,13 @@ public class AlertGenerator {
         if (Math.abs(change1) > 10 &&
             Math.abs(change2) > 10 &&
             Math.signum(change1) == Math.signum(change2)) {
-          return new Alert("TREND: SYSTOLIC PRESSURE",
-              String.valueOf(patient.getId()), record1.timestamp());
+          if (Math.signum(change1) > 0) {
+            return new Alert(String.valueOf(patient.getId()),
+                "TREND: INCREASING SYSTOLIC PRESSURE", record1.timestamp());
+          } else {
+            return new Alert(String.valueOf(patient.getId()),
+                "TREND: DECREASING SYSTOLIC PRESSURE", record1.timestamp());
+          }
         }
       }
     }

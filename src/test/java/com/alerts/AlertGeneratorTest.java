@@ -4,7 +4,9 @@ import com.data_management.DataStorage;
 import com.data_management.Patient;
 import com.data_management.PatientRecord;
 import com.data_management.Reader;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import java.io.BufferedReader;
 import java.io.File;
@@ -21,40 +23,285 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SuppressWarnings("CallToPrintStackTrace")
 class AlertGeneratorTest {
+  private DataStorage dataStorage;
+  private Reader reader;
+  private AlertGenerator alertGenerator;
+  File resourcesDirectory = new File("src/test/resources");
 
-  @Test
-  @DisplayName("Critical Low Diastolic Pressure Alert")
-  void testCriticalLowDiastolicPressure() {
-    DataStorage dataStorage = new DataStorage();
-    Reader reader = new Reader();
-    AlertGenerator alertGenerator = new AlertGenerator(dataStorage);
 
-    File resourcesDirectory = new File("src/test/resources");
-    File diastolicPressureData = new File(resourcesDirectory,
-        "alert-mock-data/critical-low-diastolic-pressure.txt");
-    correctTimestamps(diastolicPressureData);
+  @BeforeEach
+  void setUp() {
+    dataStorage = new DataStorage();
+    reader = new Reader();
+    alertGenerator = new AlertGenerator(dataStorage);
+  }
 
-    try {
-      reader.readData(diastolicPressureData, dataStorage);
-    } catch (IOException e) {
-      System.out.println("Could not read from file");
-      e.printStackTrace();
+  @Nested
+  @DisplayName("Blood Pressure Data Alerts")
+  class BloodPressureAlertEvaluationTest {
+    @BeforeEach
+    void setUp() {
+      // set up the directory for the blood pressure test files
+      resourcesDirectory = new File(resourcesDirectory, "alert-mock-data/blood-pressure");
+    }
+    @Test
+    @DisplayName("Critical: Low Diastolic Pressure Alert")
+    void testCriticalLowDiastolicPressure() {
+      File diastolicPressureData = new File(resourcesDirectory,
+          "diastolic-pressure/critical-low-diastolic-pressure.txt");
+      correctTimestamps(diastolicPressureData);
+
+      try {
+        reader.readData(diastolicPressureData, dataStorage);
+      } catch (IOException e) {
+        System.out.println("Could not read from file");
+        e.printStackTrace();
+      }
+
+      // patient of interest
+      String patientId = String.valueOf(dataStorage.getAllPatients().getFirst().getId());
+      List<PatientRecord> records = dataStorage.getRecords(Integer.parseInt(patientId));
+      long timestamp = records.getFirst().timestamp();
+      Patient patient = new Patient(Integer.parseInt(patientId));
+
+      Alert expected = new Alert(patientId, "CRITICAL: LOW DIASTOLIC PRESSURE",
+          timestamp);
+      Alert actual = alertGenerator.bloodPressureAlert(patient);
+      assertEquals(expected, actual);
     }
 
-    // patient of interest
-    String patientId = String.valueOf(dataStorage.getAllPatients().getFirst().getId());
-    List<PatientRecord> records = dataStorage.getRecords(Integer.parseInt(patientId));
-    long timestamp = records.getFirst().timestamp();
-    Patient patient = new Patient(Integer.parseInt(patientId));
+    @Test
+    @DisplayName("Critical: High Diastolic Pressure Alert")
+    void testCriticalHighDiastolicPressure() {
+      File diastolicPressureData = new File(resourcesDirectory,
+          "diastolic-pressure/critical-high-diastolic-pressure.txt");
+      correctTimestamps(diastolicPressureData);
 
-    Alert expected = new Alert(patientId, "CRITICAL: LOW DIASTOLIC PRESSURE",
-        timestamp);
-    System.out.println(expected.hashCode());
-    Alert actual = alertGenerator.bloodPressureAlert(patient);
-    System.out.println(actual.hashCode());
+      try {
+        reader.readData(diastolicPressureData, dataStorage);
+      } catch (IOException e) {
+        System.out.println("Could not read from file");
+        e.printStackTrace();
+      }
 
-    assertEquals(expected, actual);
+      // patient of interest
+      String patientId = String.valueOf(dataStorage.getAllPatients().getFirst().getId());
+      List<PatientRecord> records = dataStorage.getRecords(Integer.parseInt(patientId));
+      long timestamp = records.getFirst().timestamp();
+      Patient patient = new Patient(Integer.parseInt(patientId));
+
+      Alert expected = new Alert(patientId, "CRITICAL: HIGH DIASTOLIC PRESSURE",
+          timestamp);
+      Alert actual = alertGenerator.bloodPressureAlert(patient);
+      assertEquals(expected, actual);
+    }
+
+    @Test
+    @DisplayName("Trend: Decreasing Diastolic Pressure Alert")
+    void testTrendDecreasingDiastolicPressure() {
+      File diastolicPressureData = new File(resourcesDirectory,
+          "diastolic-pressure/trend-decreasing-diastolic-pressure.txt");
+      correctTimestamps(diastolicPressureData);
+
+      try {
+        reader.readData(diastolicPressureData, dataStorage);
+      } catch (IOException e) {
+        System.out.println("Could not read from file");
+        e.printStackTrace();
+      }
+
+      // patient of interest
+      String patientId = String.valueOf(dataStorage.getAllPatients().getFirst().getId());
+      List<PatientRecord> records = dataStorage.getRecords(Integer.parseInt(patientId));
+      long timestamp = records.getFirst().timestamp();
+      Patient patient = new Patient(Integer.parseInt(patientId));
+
+      Alert expected = new Alert(patientId, "TREND: DECREASING DIASTOLIC PRESSURE",
+          timestamp);
+      Alert actual = alertGenerator.bloodPressureAlert(patient);
+      assertEquals(expected, actual);
+    }
+
+    @Test
+    @DisplayName("Trend: Increasing Diastolic Pressure Alert")
+    void testTrendIncreasingDiastolicPressure() {
+      File diastolicPressureData = new File(resourcesDirectory,
+          "diastolic-pressure/trend-increasing-diastolic-pressure.txt");
+      correctTimestamps(diastolicPressureData);
+
+      try {
+        reader.readData(diastolicPressureData, dataStorage);
+      } catch (IOException e) {
+        System.out.println("Could not read from file");
+        e.printStackTrace();
+      }
+
+      // patient of interest
+      String patientId = String.valueOf(dataStorage.getAllPatients().getFirst().getId());
+      List<PatientRecord> records = dataStorage.getRecords(Integer.parseInt(patientId));
+      long timestamp = records.getFirst().timestamp();
+      Patient patient = new Patient(Integer.parseInt(patientId));
+
+      Alert expected = new Alert(patientId, "TREND: INCREASING DIASTOLIC PRESSURE",
+          timestamp);
+      Alert actual = alertGenerator.bloodPressureAlert(patient);
+      assertEquals(expected, actual);
+    }
+
+    @Test
+    @DisplayName("No Alert: Normal Diastolic Pressure")
+    void testNormalDiastolicPressure() {
+      File diastolicPressureData = new File(resourcesDirectory,
+          "diastolic-pressure/normal-diastolic-pressure.txt");
+      correctTimestamps(diastolicPressureData);
+
+      try {
+        reader.readData(diastolicPressureData, dataStorage);
+      } catch (IOException e) {
+        System.out.println("Could not read from file");
+        e.printStackTrace();
+      }
+
+      // patient of interest
+      String patientId = String.valueOf(dataStorage.getAllPatients().getFirst().getId());
+      List<PatientRecord> records = dataStorage.getRecords(Integer.parseInt(patientId));
+      long timestamp = records.getFirst().timestamp();
+      Patient patient = new Patient(Integer.parseInt(patientId));
+
+      Alert actual = alertGenerator.bloodPressureAlert(patient);
+      assertNull(actual);
+    }
+
+    @Test
+    @DisplayName("Critical: Low Systolic Pressure Alert")
+    void testCriticalLowSystolicPressure() {
+      File systolicPressureData = new File(resourcesDirectory,
+          "systolic-pressure/critical-low-systolic-pressure.txt");
+      correctTimestamps(systolicPressureData);
+
+      try {
+        reader.readData(systolicPressureData, dataStorage);
+      } catch (IOException e) {
+        System.out.println("Could not read from file");
+        e.printStackTrace();
+      }
+
+      // patient of interest
+      String patientId = String.valueOf(dataStorage.getAllPatients().getFirst().getId());
+      List<PatientRecord> records = dataStorage.getRecords(Integer.parseInt(patientId));
+      long timestamp = records.getFirst().timestamp();
+      Patient patient = new Patient(Integer.parseInt(patientId));
+
+      Alert expected = new Alert(patientId, "CRITICAL: LOW SYSTOLIC PRESSURE",
+          timestamp);
+      Alert actual = alertGenerator.bloodPressureAlert(patient);
+      assertEquals(expected, actual);
+    }
+
+
+    @Test
+    @DisplayName("Critical: High Systolic Pressure Alert")
+    void testCriticalHighSystolicPressure() {
+      File systolicPressureData = new File(resourcesDirectory,
+          "systolic-pressure/critical-high-systolic-pressure.txt");
+      correctTimestamps(systolicPressureData);
+
+      try {
+        reader.readData(systolicPressureData, dataStorage);
+      } catch (IOException e) {
+        System.out.println("Could not read from file");
+        e.printStackTrace();
+      }
+
+      // patient of interest
+      String patientId = String.valueOf(dataStorage.getAllPatients().getFirst().getId());
+      List<PatientRecord> records = dataStorage.getRecords(Integer.parseInt(patientId));
+      long timestamp = records.getFirst().timestamp();
+      Patient patient = new Patient(Integer.parseInt(patientId));
+
+      Alert expected = new Alert(patientId, "CRITICAL: HIGH SYSTOLIC PRESSURE",
+          timestamp);
+      Alert actual = alertGenerator.bloodPressureAlert(patient);
+      assertEquals(expected, actual);
+    }
+
+    @Test
+    @DisplayName("Trend: Increasing Systolic Pressure Alert")
+    void testTrendIncreasingSystolicPressure() {
+      File systolicPressureData = new File(resourcesDirectory,
+          "systolic-pressure/trend-increasing-systolic-pressure.txt");
+      correctTimestamps(systolicPressureData);
+
+      try {
+        reader.readData(systolicPressureData, dataStorage);
+      } catch (IOException e) {
+        System.out.println("Could not read from file");
+        e.printStackTrace();
+      }
+
+      // patient of interest
+      String patientId = String.valueOf(dataStorage.getAllPatients().getFirst().getId());
+      List<PatientRecord> records = dataStorage.getRecords(Integer.parseInt(patientId));
+      long timestamp = records.getFirst().timestamp();
+      Patient patient = new Patient(Integer.parseInt(patientId));
+
+      Alert expected = new Alert(patientId, "TREND: INCREASING SYSTOLIC PRESSURE",
+          timestamp);
+      Alert actual = alertGenerator.bloodPressureAlert(patient);
+      assertEquals(expected, actual);
+    }
+
+    @Test
+    @DisplayName("Trend: Decreasing Systolic Pressure Alert")
+    void testTrendDecreasingSystolicPressure() {
+      File systolicPressureData = new File(resourcesDirectory,
+          "systolic-pressure/trend-decreasing-systolic-pressure.txt");
+      correctTimestamps(systolicPressureData);
+
+      try {
+        reader.readData(systolicPressureData, dataStorage);
+      } catch (IOException e) {
+        System.out.println("Could not read from file");
+        e.printStackTrace();
+      }
+
+      // patient of interest
+      String patientId = String.valueOf(dataStorage.getAllPatients().getFirst().getId());
+      List<PatientRecord> records = dataStorage.getRecords(Integer.parseInt(patientId));
+      long timestamp = records.getFirst().timestamp();
+      Patient patient = new Patient(Integer.parseInt(patientId));
+
+      Alert expected = new Alert(patientId, "TREND: DECREASING SYSTOLIC PRESSURE",
+          timestamp);
+      Alert actual = alertGenerator.bloodPressureAlert(patient);
+      assertEquals(expected, actual);
+    }
+
+    @Test
+    @DisplayName("No Alert: Normal Systolic Pressure")
+    void testNormalSystolicPressure() {
+      File systolicPressureData = new File(resourcesDirectory,
+          "systolic-pressure/normal-systolic-pressure.txt");
+      correctTimestamps(systolicPressureData);
+
+      try {
+        reader.readData(systolicPressureData, dataStorage);
+      } catch (IOException e) {
+        System.out.println("Could not read from file");
+        e.printStackTrace();
+      }
+
+      // patient of interest
+      String patientId = String.valueOf(dataStorage.getAllPatients().getFirst().getId());
+      List<PatientRecord> records = dataStorage.getRecords(Integer.parseInt(patientId));
+      long timestamp = records.getFirst().timestamp();
+      Patient patient = new Patient(Integer.parseInt(patientId));
+
+      Alert actual = alertGenerator.bloodPressureAlert(patient);
+      assertNull(actual);
+    }
   }
+
 
   /**
    * <p>Helper method only used in a testing context,
@@ -67,7 +314,7 @@ class AlertGeneratorTest {
    * @param source file to correct
    * @throws IOException
    */
-  private void correctTimestamps(File source){
+  private void correctTimestamps(File source) {
     // This is the cleanest way this team could come up with testing data which depends on timestamps.
     List<String> newLines = new ArrayList<>();
 

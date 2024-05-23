@@ -1,0 +1,4 @@
+Patient ID: 01, Timestamp: 1716501786951, Label: SystolicPressure, Data: 163.0
+Patient ID: 01, Timestamp: 1716501786952, Label: SystolicPressure, Data: 152.0
+Patient ID: 01, Timestamp: 1716501786953, Label: SystolicPressure, Data: 141.0
+Patient ID: 01, Timestamp: 1716501786954, Label: SystolicPressure, Data: 130.0
