@@ -75,19 +75,24 @@ public class AlertGenerator {
    * @param patient patient to check
    * @return {@code Alert} if necessary, {@code null} otherwise
    */
-  private Alert bloodPressureAlert(Patient patient) {
+  public Alert bloodPressureAlert(Patient patient) {
     List<PatientRecord> records = dataStorage.getRecords(patient.getId(),
         System.currentTimeMillis() - (10 * 60 * 1000), Long.MAX_VALUE);
-
+    System.out.println("Retrieved records: "  +records);
     for (int i = 2; i < records.size(); i++) {
       PatientRecord record1 = records.get(i - 2);
+      System.out.println("record1 = " + record1);
       PatientRecord record2 = records.get(i - 1);
       PatientRecord record3 = records.get(i);
 
+      // Critical alert: diastolic & systolic
       if (record1.recordType().equalsIgnoreCase("DiastolicPressure")) {
-        if (exceedsThresholds(60, 120, record1.measurementValue())) {
+        if (record1.measurementValue() < 60) {
           return new Alert(String.valueOf(patient.getId()),
-              "CRITICAL: DIASTOLIC PRESSURE", record1.timestamp());
+              "CRITICAL: LOW DIASTOLIC PRESSURE", record1.timestamp());
+        } else if (record1.measurementValue() > 120) {
+          return new Alert(String.valueOf(patient.getId()),
+              "CRITICAL: HIGH DIASTOLIC PRESSURE", record1.timestamp());
         }
       } else if (record1.recordType().equalsIgnoreCase("SystolicPressure")) {
         if (exceedsThresholds(90, 180, record1.measurementValue())) {
@@ -145,7 +150,7 @@ public class AlertGenerator {
    * @return a string message indicating the type of alert triggered, or {@code null} if no alerts
    * are triggered within the specified time range
    */
-  private Alert bloodSaturationAlert(Patient patient) {
+  public Alert bloodSaturationAlert(Patient patient) {
     // Get all blood oxygen saturation records for the patient
     List<PatientRecord> saturationRecords = patient.getRecords(System.currentTimeMillis()
             - (10 * 60 * 1000), System.currentTimeMillis())
@@ -195,7 +200,7 @@ public class AlertGenerator {
    * @param patient patient to check
    * @return {@code Alert} if necessary, {@code null} otherwise
    */
-  private Alert hypotensiveHypoxemiaAlert(Patient patient) {
+  public Alert hypotensiveHypoxemiaAlert(Patient patient) {
     List<PatientRecord> bloodPressureRecords = patient.getRecords(System.currentTimeMillis()
             - (10 * 60 * 1000), System.currentTimeMillis())
         .stream()
@@ -220,7 +225,11 @@ public class AlertGenerator {
     return null;
   }
 
-  private Alert ecgAlert(Patient patient) {
+  /**
+   * @param patient
+   * @return
+   */
+  public Alert ecgAlert(Patient patient) {
     List<PatientRecord> ecgRecords = patient.getRecords(System.currentTimeMillis()
             - (10 * 60 * 1000), System.currentTimeMillis())
         .stream()
