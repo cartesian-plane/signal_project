@@ -78,10 +78,9 @@ public class AlertGenerator {
   public Alert bloodPressureAlert(Patient patient) {
     List<PatientRecord> records = dataStorage.getRecords(patient.getId(),
         System.currentTimeMillis() - (10 * 60 * 1000), Long.MAX_VALUE);
-    System.out.println("Retrieved records: "  +records);
+
     for (int i = 2; i < records.size(); i++) {
       PatientRecord record1 = records.get(i - 2);
-      System.out.println("record1 = " + record1);
       PatientRecord record2 = records.get(i - 1);
       PatientRecord record3 = records.get(i);
 
@@ -95,9 +94,12 @@ public class AlertGenerator {
               "CRITICAL: HIGH DIASTOLIC PRESSURE", record1.timestamp());
         }
       } else if (record1.recordType().equalsIgnoreCase("SystolicPressure")) {
-        if (exceedsThresholds(90, 180, record1.measurementValue())) {
+        if (record1.measurementValue() < 90) {
           return new Alert(String.valueOf(patient.getId()),
-              "CRITICAL: SYSTOLIC PRESSURE", record1.timestamp());
+              "CRITICAL: LOW SYSTOLIC PRESSURE", record1.timestamp());
+        } else if (record1.measurementValue() > 180) {
+          return new Alert(String.valueOf(patient.getId()),
+              "CRITICAL: HIGH SYSTOLIC PRESSURE", record1.timestamp());
         }
       }
 
