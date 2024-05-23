@@ -5,7 +5,6 @@ import com.data_management.Patient;
 import com.data_management.PatientRecord;
 import java.util.List;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * The {@code AlertGenerator} class is responsible for monitoring patient data and generating alerts
@@ -227,6 +226,27 @@ public class AlertGenerator {
         .stream()
         .filter(record -> record.recordType().equals("ECG"))
         .toList();
+
+    double average = ecgRecords.stream()
+        .mapToDouble(PatientRecord::measurementValue)
+        .average()
+        .orElse(0);
+
+    double variance = Math.sqrt(ecgRecords.stream()
+        .mapToDouble(record -> Math.pow(record.measurementValue() - average, 2))
+        .average()
+
+        .orElse(0));
+    double sd = Math.sqrt(variance);
+
+    double threshold = average + 2 * sd;
+    for (PatientRecord record : ecgRecords) {
+      if (Math.abs(record.measurementValue()) > threshold) {
+        return new Alert(String.valueOf(patient.getId()), "ECG PEAK ALERT",
+            record.timestamp());
+      }
+    }
+
     return null;
   }
 
