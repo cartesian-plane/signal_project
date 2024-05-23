@@ -55,4 +55,17 @@ public class Patient {
         .filter(record -> record.timestamp() >= startTime && record.timestamp() <= endTime)
         .collect(Collectors.toList());
   }
+
+  /**
+   * <p>Retrieves a complete list of PatientRecord objects for this patient
+   * (not filtered for a time range).</p>
+   *
+   * @return a list of PatientRecord objects that fall within the specified time range
+   */
+  public List<PatientRecord> getRecords() {
+    return patientRecords.stream()
+        .filter(
+            record -> record.timestamp() >= 0 && record.timestamp() <= System.currentTimeMillis())
+        .collect(Collectors.toList());
+  }
 }
