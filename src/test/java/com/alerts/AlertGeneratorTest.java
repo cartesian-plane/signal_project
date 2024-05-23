@@ -330,7 +330,6 @@ class AlertGeneratorTest {
         Matcher matcher = pattern.matcher(line);
 
         if (matcher.find()) {
-          String timestampStr = matcher.group(1); // group 1 is the first group in the regex, i.e., (\\d+)
           String oldTimestamp = matcher.group(1);
 
           if (isFirstLine) {
