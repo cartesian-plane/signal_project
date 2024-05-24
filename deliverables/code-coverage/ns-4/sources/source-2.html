@@ -1,0 +1,172 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > FileOutputStrategy</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.cardiogenerator.outputs</a>
+</div>
+
+<h1>Coverage Summary for Class: FileOutputStrategy (com.cardiogenerator.outputs)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">FileOutputStrategy</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/14)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.cardiogenerator.outputs;
+&nbsp;// Changed package name by removing underscore
+&nbsp;
+&nbsp;import java.io.IOException;
+&nbsp;import java.io.PrintWriter;
+&nbsp;import java.nio.file.Files;
+&nbsp;import java.nio.file.Paths;
+&nbsp;import java.nio.file.StandardOpenOption;
+&nbsp;import java.util.concurrent.ConcurrentHashMap;
+&nbsp;
+&nbsp;/**
+&nbsp; * Strategy used by the strategy pattern.
+&nbsp; */
+&nbsp;public class FileOutputStrategy implements OutputStrategy {
+&nbsp;
+&nbsp;  // Changed variable name to lowerCamelCase
+&nbsp;  private String baseDirectory;
+&nbsp;
+&nbsp;  // Changed variable name to lowerCamelCase
+<b class="nc">&nbsp;  public final ConcurrentHashMap&lt;String, String&gt; fileMap = new ConcurrentHashMap&lt;&gt;();</b>
+&nbsp;
+<b class="nc">&nbsp;  public FileOutputStrategy(String baseDirectory) {</b>
+&nbsp;
+<b class="nc">&nbsp;    this.baseDirectory = baseDirectory;</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  /**
+&nbsp;   * Writes patient data to a file in the {@code baseDirectory} specified by the user.
+&nbsp;   *
+&nbsp;   * &lt;p&gt;If a directory cannot be created, it will throw an error.&lt;/p&gt;
+&nbsp;   *
+&nbsp;   * &lt;p&gt;Every type of data will be stored in its own file (i.e. cholesterol.txt).
+&nbsp;   * If such a file does not exist, one will be created.&lt;/p&gt;
+&nbsp;   *
+&nbsp;   * &lt;p&gt;The data format is: patientID, timestamp, Label, Data&lt;/p&gt;
+&nbsp;   *
+&nbsp;   * @param patientId the id of the patient
+&nbsp;   * @param timestamp the timestamp of the data
+&nbsp;   * @param label     the type of data (i.e. DiastolicPressure, Cholesterol)
+&nbsp;   * @param data      the data to be written (could come from any generator)
+&nbsp;   */
+&nbsp;  @Override
+&nbsp;  public void output(int patientId, long timestamp, String label, String data) {
+&nbsp;    try {
+&nbsp;      // Create the directory
+<b class="nc">&nbsp;      Files.createDirectories(Paths.get(baseDirectory));</b>
+<b class="nc">&nbsp;    } catch (IOException e) {</b>
+<b class="nc">&nbsp;      System.err.println(&quot;Error creating base directory: &quot; + e.getMessage());</b>
+&nbsp;      return;
+&nbsp;    }
+&nbsp;    // Set the filePath variable
+&nbsp;    // Changed variable name to lowerCamelCase
+&nbsp;    // Wrap line
+<b class="nc">&nbsp;    String filePath = fileMap.computeIfAbsent(label, k -&gt; Paths.get(baseDirectory, label</b>
+<b class="nc">&nbsp;        + &quot;.txt&quot;).toString());</b>
+&nbsp;
+&nbsp;    // Wrap line at 100 characters
+&nbsp;    // Write the data to the file
+<b class="nc">&nbsp;    try (PrintWriter out = new PrintWriter(</b>
+<b class="nc">&nbsp;        Files.newBufferedWriter(Paths.get(filePath), StandardOpenOption.CREATE,</b>
+&nbsp;            StandardOpenOption.APPEND))) {
+<b class="nc">&nbsp;      out.printf(&quot;Patient ID: %d, Timestamp: %d, Label: %s, Data: %s%n&quot;, patientId,</b>
+<b class="nc">&nbsp;          timestamp, label, data);</b>
+<b class="nc">&nbsp;    } catch (Exception e) {</b>
+<b class="nc">&nbsp;      System.err.println(&quot;Error writing to file &quot; + filePath + &quot;: &quot; + e.getMessage());</b>
+&nbsp;    }
+&nbsp;  }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-24 18:07</div>
+</div>
+</body>
+</html>

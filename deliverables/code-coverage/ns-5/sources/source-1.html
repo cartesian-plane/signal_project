@@ -1,0 +1,241 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > DataStorage</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.data_management</a>
+</div>
+
+<h1>Coverage Summary for Class: DataStorage (com.data_management)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">DataStorage</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    83.3%
+  </span>
+  <span class="absValue">
+    (5/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    40%
+  </span>
+  <span class="absValue">
+    (4/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    53.8%
+  </span>
+  <span class="absValue">
+    (14/26)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.data_management;
+&nbsp;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.HashMap;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Map;
+&nbsp;import com.alerts.AlertGenerator;
+&nbsp;
+&nbsp;/**
+&nbsp; * Manages storage and retrieval of patient data within a healthcare monitoring
+&nbsp; * system.
+&nbsp; * This class serves as a repository for all patient records, organized by
+&nbsp; * patient IDs.
+&nbsp; */
+&nbsp;public class DataStorage {
+&nbsp;    private Map&lt;Integer, Patient&gt; patientMap; // Stores patient objects indexed by their unique patient ID.
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Constructs a new instance of DataStorage, initializing the underlying storage
+&nbsp;     * structure.
+&nbsp;     */
+<b class="fc">&nbsp;    public DataStorage() {</b>
+<b class="fc">&nbsp;        this.patientMap = new HashMap&lt;&gt;();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Adds or updates patient data in the storage. If the patient does not exist, a new Patient
+&nbsp;     * object is created and added to the storage. Otherwise, the new data is added to the existing
+&nbsp;     * patient&#39;s records.
+&nbsp;     *
+&nbsp;     * @param patientId        the unique identifier of the patient
+&nbsp;     * @param timestamp        the time at which the measurement was taken, in milliseconds since the
+&nbsp;     *                         Unix epoch
+&nbsp;     * @param recordType       the type of record, e.g., &quot;HeartRate&quot;, &quot;BloodPressure&quot;
+&nbsp;     * @param measurementValue the value of the health metric being recorded
+&nbsp;     */
+&nbsp;    public void addPatientData(int patientId, long timestamp, String recordType,
+&nbsp;        double measurementValue) {
+<b class="fc">&nbsp;        Patient patient = patientMap.get(patientId);</b>
+<b class="fc">&nbsp;        if (patient == null) {</b>
+<b class="fc">&nbsp;            patient = new Patient(patientId);</b>
+<b class="fc">&nbsp;            patientMap.put(patientId, patient);</b>
+&nbsp;        }
+<b class="fc">&nbsp;        patient.addRecord(measurementValue, recordType, timestamp);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;  /**
+&nbsp;   * Retrieves a list of PatientRecord objects for a specific patient, filtered by
+&nbsp;   * a time range.
+&nbsp;   *
+&nbsp;   * @param patientId the unique identifier of the patient whose records are to be
+&nbsp;   *                  retrieved
+&nbsp;   * @param startTime the start of the time range, in milliseconds since the Unix
+&nbsp;   *                  epoch
+&nbsp;   * @param endTime   the end of the time range, in milliseconds since the Unix
+&nbsp;   *                  epoch
+&nbsp;   * @return a list of PatientRecord objects that fall within the specified time
+&nbsp;   *         range
+&nbsp;   */
+&nbsp;  public List&lt;PatientRecord&gt; getRecords(int patientId, long startTime, long endTime) {
+<b class="fc">&nbsp;    Patient patient = patientMap.get(patientId);</b>
+<b class="pc">&nbsp;    if (patient != null) {</b>
+<b class="fc">&nbsp;      return patient.getRecords(startTime, endTime);</b>
+&nbsp;    }
+<b class="nc">&nbsp;    return new ArrayList&lt;&gt;();</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  /**
+&nbsp;   * &lt;p&gt;Retrieves a complete list of PatientRecord objects for a specific patient
+&nbsp;   * (not filtered for a time range).&lt;/p&gt;
+&nbsp;   *
+&nbsp;   * @param patientId the unique identifier of the patient whose records are to be retrieved
+&nbsp;   * @return a list of PatientRecord objects that fall within the specified time range
+&nbsp;   */
+&nbsp;    public List&lt;PatientRecord&gt; getRecords(int patientId) {
+<b class="fc">&nbsp;        Patient patient = patientMap.get(patientId);</b>
+<b class="pc">&nbsp;        if (patient != null) {</b>
+<b class="fc">&nbsp;            return patient.getRecords();</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return new ArrayList&lt;&gt;(); // return an empty list if no patient is found</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Retrieves a collection of all patients stored in the data storage.
+&nbsp;     *
+&nbsp;     * @return a list of all patients
+&nbsp;     */
+&nbsp;    public List&lt;Patient&gt; getAllPatients() {
+<b class="fc">&nbsp;        return new ArrayList&lt;&gt;(patientMap.values());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * The main method for the DataStorage class.
+&nbsp;     * Initializes the system, reads data into storage, and continuously monitors
+&nbsp;     * and evaluates patient data.
+&nbsp;     *
+&nbsp;     * @param args command line arguments
+&nbsp;     */
+&nbsp;    public static void main(String[] args) {
+&nbsp;        // DataReader is not defined in this scope, should be initialized appropriately.
+&nbsp;        // DataReader reader = new SomeDataReaderImplementation(&quot;path/to/data&quot;);
+<b class="nc">&nbsp;        DataStorage storage = new DataStorage();</b>
+&nbsp;
+&nbsp;        // Assuming the reader has been properly initialized and can read data into the
+&nbsp;        // storage
+&nbsp;        // reader.readData(storage);
+&nbsp;
+&nbsp;        // Example of using DataStorage to retrieve and print records for a patient
+<b class="nc">&nbsp;        List&lt;PatientRecord&gt; records = storage.getRecords(1, 1700000000000L, 1800000000000L);</b>
+<b class="nc">&nbsp;        for (PatientRecord record : records) {</b>
+<b class="nc">&nbsp;            System.out.println(&quot;Record for Patient ID: &quot; + record.patientId() +</b>
+<b class="nc">&nbsp;                    &quot;, Type: &quot; + record.recordType() +</b>
+<b class="nc">&nbsp;                    &quot;, Data: &quot; + record.measurementValue() +</b>
+<b class="nc">&nbsp;                    &quot;, Timestamp: &quot; + record.timestamp());</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        // Initialize the AlertGenerator with the storage
+<b class="nc">&nbsp;        AlertGenerator alertGenerator = new AlertGenerator(storage);</b>
+&nbsp;
+&nbsp;        // Evaluate all patients&#39; data to check for conditions that may trigger alerts
+<b class="nc">&nbsp;        for (Patient patient : storage.getAllPatients()) {</b>
+<b class="nc">&nbsp;            alertGenerator.evaluateData(patient);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-24 18:07</div>
+</div>
+</body>
+</html>

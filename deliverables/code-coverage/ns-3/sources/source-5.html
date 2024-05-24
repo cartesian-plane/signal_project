@@ -1,0 +1,165 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > ECGDataGenerator</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.cardiogenerator.generators</a>
+</div>
+
+<h1>Coverage Summary for Class: ECGDataGenerator (com.cardiogenerator.generators)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ECGDataGenerator</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/20)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.cardiogenerator.generators;
+&nbsp;
+&nbsp;import java.util.Random;
+&nbsp;
+&nbsp;import com.cardiogenerator.outputs.OutputStrategy;
+&nbsp;
+&nbsp;public class ECGDataGenerator implements PatientDataGenerator {
+&nbsp;
+<b class="nc">&nbsp;  private static final Random random = new Random();</b>
+&nbsp;  private double[] lastEcgValues;
+&nbsp;  private static final double PI = Math.PI;
+&nbsp;
+<b class="nc">&nbsp;  public ECGDataGenerator(int patientCount) {</b>
+<b class="nc">&nbsp;    lastEcgValues = new double[patientCount + 1];</b>
+&nbsp;    // Initialize the last ECG value for each patient
+<b class="nc">&nbsp;    for (int i = 1; i &lt;= patientCount; i++) {</b>
+<b class="nc">&nbsp;      lastEcgValues[i] = 0; // Initial ECG value can be set to 0</b>
+&nbsp;    }
+&nbsp;  }
+&nbsp;
+&nbsp;  @Override
+&nbsp;  public void generate(int patientId, OutputStrategy outputStrategy) {
+&nbsp;    // TODO Check how realistic this data is and make it more realistic if necessary
+&nbsp;    try {
+<b class="nc">&nbsp;      double ecgValue = simulateEcgWaveform(patientId, lastEcgValues[patientId]);</b>
+<b class="nc">&nbsp;      outputStrategy.output(patientId, System.currentTimeMillis(), &quot;ECG&quot;,</b>
+<b class="nc">&nbsp;          Double.toString(ecgValue));</b>
+<b class="nc">&nbsp;      lastEcgValues[patientId] = ecgValue;</b>
+<b class="nc">&nbsp;    } catch (Exception e) {</b>
+<b class="nc">&nbsp;      System.err.println(&quot;An error occurred while generating ECG data for patient &quot; + patientId);</b>
+<b class="nc">&nbsp;      e.printStackTrace(); // This will print the stack trace to help identify where the error occurred.</b>
+&nbsp;    }
+&nbsp;  }
+&nbsp;
+&nbsp;  private double simulateEcgWaveform(int patientId, double lastEcgValue) {
+&nbsp;    // Simplified ECG waveform generation based on sinusoids
+<b class="nc">&nbsp;    double hr =</b>
+<b class="nc">&nbsp;        60.0 + random.nextDouble() * 20.0; // Simulate heart rate variability between 60 and 80 bpm</b>
+<b class="nc">&nbsp;    double t = System.currentTimeMillis() / 1000.0; // Use system time to simulate continuous time</b>
+<b class="nc">&nbsp;    double ecgFrequency = hr / 60.0; // Convert heart rate to Hz</b>
+&nbsp;
+&nbsp;    // Simulate different components of the ECG signal
+<b class="nc">&nbsp;    double pWave = 0.1 * Math.sin(2 * PI * ecgFrequency * t);</b>
+<b class="nc">&nbsp;    double qrsComplex = 0.5 * Math.sin(2 * PI * 3 * ecgFrequency * t); // QRS is higher frequency</b>
+<b class="nc">&nbsp;    double tWave = 0.2 * Math.sin(2 * PI * 2 * ecgFrequency * t + PI / 4); // T wave is offset</b>
+&nbsp;
+<b class="nc">&nbsp;    return pWave + qrsComplex + tWave + random.nextDouble() * 0.05; // Add small noise</b>
+&nbsp;  }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-24 18:07</div>
+</div>
+</body>
+</html>

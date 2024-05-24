@@ -1,0 +1,187 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > Patient</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.data_management</a>
+</div>
+
+<h1>Coverage Summary for Class: Patient (com.data_management)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Patient</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (6/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    62.5%
+  </span>
+  <span class="absValue">
+    (5/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (13/13)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.data_management;
+&nbsp;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.List;
+&nbsp;import java.util.stream.Collectors;
+&nbsp;
+&nbsp;/**
+&nbsp; * Represents a patient and manages their medical records. This class stores patient-specific data,
+&nbsp; * allowing for the addition and retrieval of medical records based on specified criteria.
+&nbsp; */
+&nbsp;public class Patient {
+&nbsp;
+&nbsp;  private int patientId;
+&nbsp;  private List&lt;PatientRecord&gt; patientRecords;
+&nbsp;
+&nbsp;  /**
+&nbsp;   * Constructs a new Patient with a specified ID. Initializes an empty list of patient records.
+&nbsp;   *
+&nbsp;   * @param patientId the unique identifier for the patient
+&nbsp;   */
+<b class="fc">&nbsp;  public Patient(int patientId) {</b>
+<b class="fc">&nbsp;    this.patientId = patientId;</b>
+<b class="fc">&nbsp;    this.patientRecords = new ArrayList&lt;&gt;();</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  public int getId() {
+<b class="fc">&nbsp;    return patientId;</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  /**
+&nbsp;   * Adds a new record to this patient&#39;s list of medical records. The record is created with the
+&nbsp;   * specified measurement value, record type, and timestamp.
+&nbsp;   *
+&nbsp;   * @param measurementValue the measurement value to store in the record
+&nbsp;   * @param recordType       the type of record, e.g., &quot;HeartRate&quot;, &quot;BloodPressure&quot;
+&nbsp;   * @param timestamp        the time at which the measurement was taken, in milliseconds since UNIX
+&nbsp;   *                         epoch
+&nbsp;   */
+&nbsp;  public void addRecord(double measurementValue, String recordType, long timestamp) {
+<b class="fc">&nbsp;    PatientRecord record = new PatientRecord(this.patientId, measurementValue, recordType,</b>
+&nbsp;        timestamp);
+<b class="fc">&nbsp;    this.patientRecords.add(record);</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  /**
+&nbsp;   * Retrieves a list of PatientRecord objects for this patient that fall within a specified time
+&nbsp;   * range. The method filters records based on the start and end times provided.
+&nbsp;   *
+&nbsp;   * @param startTime the start of the time range, in milliseconds since UNIX epoch
+&nbsp;   * @param endTime   the end of the time range, in milliseconds since UNIX epoch
+&nbsp;   * @return a list of PatientRecord objects that fall within the specified time range
+&nbsp;   */
+&nbsp;  public List&lt;PatientRecord&gt; getRecords(long startTime, long endTime) {
+<b class="fc">&nbsp;    return patientRecords.stream()</b>
+<b class="pc">&nbsp;        .filter(record -&gt; record.timestamp() &gt;= startTime &amp;&amp; record.timestamp() &lt;= endTime)</b>
+<b class="fc">&nbsp;        .collect(Collectors.toList());</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  /**
+&nbsp;   * &lt;p&gt;Retrieves a complete list of PatientRecord objects for this patient
+&nbsp;   * (not filtered for a time range).&lt;/p&gt;
+&nbsp;   *
+&nbsp;   * @return a list of PatientRecord objects that fall within the specified time range
+&nbsp;   */
+&nbsp;  public List&lt;PatientRecord&gt; getRecords() {
+<b class="fc">&nbsp;    return patientRecords.stream()</b>
+<b class="fc">&nbsp;        .filter(</b>
+<b class="pc">&nbsp;            record -&gt; record.timestamp() &gt;= 0 &amp;&amp; record.timestamp() &lt;= System.currentTimeMillis())</b>
+<b class="fc">&nbsp;        .collect(Collectors.toList());</b>
+&nbsp;  }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-24 18:07</div>
+</div>
+</body>
+</html>
