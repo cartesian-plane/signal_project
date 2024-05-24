@@ -302,6 +302,93 @@ class AlertGeneratorTest {
     }
   }
 
+  @Nested
+  @DisplayName("Blood Saturation Data Alerts")
+  class BloodSaturationAlertEvaluationTest {
+    @BeforeEach
+    void setUp() {
+      // set up the directory for the blood saturation test files
+      resourcesDirectory = new File(resourcesDirectory, "alert-mock-data/blood-saturation");
+    }
+
+    @Test
+    @DisplayName("Critical: Low Saturation Alert")
+    void testCriticalLowSaturation() {
+      File saturationData = new File(resourcesDirectory,
+          "critical-low-saturation.txt");
+      correctTimestamps(saturationData);
+
+      try {
+        reader.readData(saturationData, dataStorage);
+      } catch (IOException e) {
+        System.out.println("Could not read from file");
+        e.printStackTrace();
+      }
+
+      // patient of interest
+      String patientId = String.valueOf(dataStorage.getAllPatients().getFirst().getId());
+      List<PatientRecord> records = dataStorage.getRecords(Integer.parseInt(patientId));
+      long timestamp = records.getFirst().timestamp();
+      Patient patient = new Patient(Integer.parseInt(patientId));
+
+      Alert expected = new Alert(patientId, "CRITICAL: LOW SATURATION",
+          timestamp);
+      Alert actual = alertGenerator.bloodSaturationAlert(patient);
+      assertEquals(expected, actual);
+    }
+
+    @Test
+    @DisplayName("Trend: Rapid Saturation Drop Alert")
+    void testTrendRapidDropSaturation() {
+      File saturationData = new File(resourcesDirectory,
+          "trend-rapid-drop-saturation.txt");
+      correctTimestamps(saturationData);
+
+      try {
+        reader.readData(saturationData, dataStorage);
+      } catch (IOException e) {
+        System.out.println("Could not read from file");
+        e.printStackTrace();
+      }
+
+      // patient of interest
+      String patientId = String.valueOf(dataStorage.getAllPatients().getFirst().getId());
+      List<PatientRecord> records = dataStorage.getRecords(Integer.parseInt(patientId));
+      long timestamp = records.getFirst().timestamp();
+      Patient patient = new Patient(Integer.parseInt(patientId));
+
+      Alert expected = new Alert(patientId, "TREND: RAPID SATURATION DROP",
+          timestamp);
+      Alert actual = alertGenerator.bloodSaturationAlert(patient);
+      assertEquals(expected, actual);
+    }
+
+    @Test
+    @DisplayName("No Alert: Normal SpO2")
+    void testNormalSaturation() {
+
+      File saturationData = new File(resourcesDirectory,
+          "normal-saturation.txt");
+      correctTimestamps(saturationData);
+
+      try {
+        reader.readData(saturationData, dataStorage);
+      } catch (IOException e) {
+        System.out.println("Could not read from file");
+        e.printStackTrace();
+      }
+
+      // patient of interest
+      String patientId = String.valueOf(dataStorage.getAllPatients().getFirst().getId());
+      List<PatientRecord> records = dataStorage.getRecords(Integer.parseInt(patientId));
+      long timestamp = records.getFirst().timestamp();
+      Patient patient = new Patient(Integer.parseInt(patientId));
+
+      Alert actual = alertGenerator.bloodSaturationAlert(patient);
+      assertNull(actual);
+    }
+  }
+
 
   /**
    * <p>Helper method only used in a testing context,

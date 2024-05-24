@@ -1,0 +1,3 @@
+Patient ID: 01, Timestamp: 1716541104353, Label: Saturation, Data: 91.0%
+Patient ID: 01, Timestamp: 1716541104363, Label: Saturation, Data: 95.0%
+Patient ID: 01, Timestamp: 1716541104373, Label: Saturation, Data: 95.0%

@@ -17,7 +17,9 @@ public class Reader implements DataReader {
         int patientId = Integer.parseInt(parts[0].split(": ")[1]);
         long timestamp = Long.parseLong(parts[1].split(": ")[1]);
         String label = parts[2].split(": ")[1];
-        double measurementValue = Double.parseDouble(parts[3].split(": ")[1]);
+        String measurementValueStr = parts[3].split(": ")[1]
+            .replace("%", "").replace("&", "");
+        double measurementValue = Double.parseDouble(measurementValueStr);
 
         dataStorage.addPatientData(patientId, timestamp, label, measurementValue);
       }

@@ -164,10 +164,11 @@ public class AlertGenerator {
    */
   public Alert bloodSaturationAlert(Patient patient) {
     // Get all blood oxygen saturation records for the patient
-    List<PatientRecord> saturationRecords = patient.getRecords(System.currentTimeMillis()
-            - (10 * 60 * 1000), System.currentTimeMillis())
+    List<PatientRecord> saturationRecords = dataStorage.getRecords(patient.getId(),
+            System.currentTimeMillis()
+            - (10 * 60 * 1000), System.currentTimeMillis() + 100)
         .stream()
-        .filter(record -> record.recordType().equals("BloodSaturation"))
+        .filter(record -> record.recordType().equalsIgnoreCase("Saturation"))
         .toList();
 
     if (saturationRecords.isEmpty()) {
@@ -180,7 +181,7 @@ public class AlertGenerator {
 
     // Check if the latest saturation is below 92%
     if (latestRecord.measurementValue() < 92) {
-      return new Alert(String.valueOf(patient.getId()), "Low Saturation Alert",
+      return new Alert(String.valueOf(patient.getId()), "CRITICAL: LOW SATURATION",
           latestRecord.timestamp());
     }
 
@@ -190,7 +191,7 @@ public class AlertGenerator {
       if ((latestRecord.timestamp() - prevRecord.timestamp()) <= (10 * 60 * 1000)) {
         double drop = latestRecord.measurementValue() - prevRecord.measurementValue();
         if (drop >= 5) {
-          return new Alert(String.valueOf(patient.getId()), "Low Saturation Alert",
+          return new Alert(String.valueOf(patient.getId()), "TREND: RAPID SATURATION DROP",
               latestRecord.timestamp());
         }
       } else {
