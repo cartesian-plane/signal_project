@@ -14,6 +14,9 @@ import java.util.function.Function;
 public class AlertGenerator {
 
   private DataStorage dataStorage;
+  private final double MIN_SYSTOLIC_PRESSURE = 90;
+  private final double MIN_SPO2 = 92;
+
 
   /**
    * Constructs an {@code AlertGenerator} with a specified {@code DataStorage}. The
@@ -37,9 +40,9 @@ public class AlertGenerator {
 
     // make a list of all the alert methods, to iterate through them
     List<Function<Patient, Alert>> alertChecks = List.of(
+        this::hypotensiveHypoxemiaAlert,
         this::bloodPressureAlert,
         this::bloodSaturationAlert,
-        this::hypotensiveHypoxemiaAlert,
         this::ecgAlert
     );
 
@@ -64,6 +67,7 @@ public class AlertGenerator {
    */
   private void triggerAlert(Alert alert) {
     // Implementation might involve logging the alert or notifying staff
+    // will complete this when building the alert dispatch system
   }
 
   /**
@@ -214,25 +218,41 @@ public class AlertGenerator {
    * @return {@code Alert} if necessary, {@code null} otherwise
    */
   public Alert hypotensiveHypoxemiaAlert(Patient patient) {
-    List<PatientRecord> bloodPressureRecords = patient.getRecords(System.currentTimeMillis()
-            - (10 * 60 * 1000), System.currentTimeMillis())
+    List<PatientRecord> systolicPressureRecords = dataStorage.getRecords(patient.getId(),
+            System.currentTimeMillis() - (10 * 60 * 1000),
+            System.currentTimeMillis() + 1000)
         .stream()
-        .filter(record -> record.recordType().equals("BloodPressure"))
+        .filter(record -> record.recordType().equalsIgnoreCase("SystolicPressure"))
         .toList();
 
-    List<PatientRecord> saturationRecords = patient.getRecords(System.currentTimeMillis()
-            - (10 * 60 * 1000), System.currentTimeMillis())
+    List<PatientRecord> saturationRecords = dataStorage.getRecords(patient.getId(),
+            System.currentTimeMillis() - (10 * 60 * 1000),
+            System.currentTimeMillis() + 1000)
         .stream()
         .filter(record -> record.recordType().equals("Saturation"))
         .toList();
 
-    for (PatientRecord pressureRecord : bloodPressureRecords) {
-      for (PatientRecord oxygenRecord : saturationRecords) {
-        if (Math.abs(pressureRecord.timestamp() - oxygenRecord.timestamp()) <= 10 * 60 * 1000) {
-          return new Alert(String.valueOf(patient.getId()), "HYPOTENSIVE HYPOXEMIA"
-              + " ALERT", Math.max(pressureRecord.timestamp(), oxygenRecord.timestamp()));
-        }
+    boolean lowSystolicPressure = false;
+    boolean lowSpO2 = false;
+
+    System.out.println(systolicPressureRecords.size());
+    for (PatientRecord pressureRecord : systolicPressureRecords) {
+      if (pressureRecord.measurementValue() < MIN_SYSTOLIC_PRESSURE) {
+        lowSystolicPressure = true;
       }
+
+    }
+
+    for (PatientRecord oxygenRecord : saturationRecords) {
+      if (oxygenRecord.measurementValue() < MIN_SPO2) {
+        lowSpO2 = true;
+      }
+
+      if (lowSpO2 && lowSystolicPressure) {
+        return new Alert(String.valueOf(patient.getId()), "CRITICAL: "
+            + "HYPOTENSIVE HYPOXEMIA", oxygenRecord.timestamp());
+      }
+
     }
 
     return null;
@@ -249,16 +269,18 @@ public class AlertGenerator {
         .filter(record -> record.recordType().equals("ECG"))
         .toList();
 
+
     double average = ecgRecords.stream()
         .mapToDouble(PatientRecord::measurementValue)
         .average()
         .orElse(0);
 
-    double variance = Math.sqrt(ecgRecords.stream()
+    double sumOfSquaredDifferences = ecgRecords.stream()
         .mapToDouble(record -> Math.pow(record.measurementValue() - average, 2))
-        .average()
+        .sum();
 
-        .orElse(0));
+    double variance = sumOfSquaredDifferences / ecgRecords.size();
+
     double sd = Math.sqrt(variance);
 
     double threshold = average + 2 * sd;
@@ -273,6 +295,27 @@ public class AlertGenerator {
   }
 
   /**
+   * Returns an {@link Alert} based on the patient Alerts generated from the
+   * {@link com.cardiogenerator.HealthDataSimulator}.
+   *
+   * @param patient patient to check
+   * @return {@code Alert} if necessary, {@code null} otherwise
+   */
+  public Alert triggeredPatientAlert(Patient patient) {
+    List<PatientRecord> alertRecords = patient.getRecords(System.currentTimeMillis()
+            - (10 * 60 * 1000), System.currentTimeMillis())
+        .stream()
+        .filter(record -> record.recordType().equals("Alert"))
+        .toList();
+
+    for (PatientRecord alert : alertRecords) {
+      // alerts don't have numerical values, so this makes no sense
+      // the whole code needs to be changed
+    }
+    return null;
+  }
+
+  /**
    * Checks if a value exceeds a given threshold (endpoints included).
    *
    * @param min   the minimum value
@@ -280,6 +323,7 @@ public class AlertGenerator {
    * @param value the value to check
    * @return {@code true} if within exceeds, {@code false} if otherwise
    */
+  @Deprecated
   private boolean exceedsThresholds(double min, double max, double value) {
     if (min >= max) {
       throw new IllegalArgumentException("Min should be strictly less than Max");

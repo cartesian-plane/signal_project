@@ -389,6 +389,82 @@ class AlertGeneratorTest {
     }
   }
 
+  @Nested
+  @DisplayName("Hypotensive Hypoxemia Data Alerts")
+  class HypotensiveHypoxemiaEvaluationTest {
+    @BeforeEach
+    void setUp() {
+      resourcesDirectory = new File(resourcesDirectory,
+          "alert-mock-data/hypotensive-hypoxemia");
+    }
+
+    @Test
+    @DisplayName("Critical: Hypotensive Hypoxemia Alert")
+    void testHypotensiveHypoxemia() {
+      File saturationData = new File(resourcesDirectory,
+          "low-saturation.txt");
+      correctTimestamps(saturationData);
+      File systolicPressureData = new File(resourcesDirectory,
+          "low-systolic-pressure.txt");
+      correctTimestamps(systolicPressureData);
+
+      try {
+        reader.readData(saturationData, dataStorage);
+        reader.readData(systolicPressureData, dataStorage);
+      } catch (IOException e) {
+        System.out.println("Could not read from file");
+        e.printStackTrace();
+      }
+
+      // patient of interest
+      String patientId = String.valueOf(dataStorage.getAllPatients().getFirst().getId());
+      List<PatientRecord> records = dataStorage.getRecords(Integer.parseInt(patientId));
+      long timestamp = records.getFirst().timestamp();
+      Patient patient = new Patient(Integer.parseInt(patientId));
+
+      Alert expected = new Alert(patientId, "CRITICAL: HYPOTENSIVE HYPOXEMIA",
+          timestamp);
+      Alert actual = alertGenerator.hypotensiveHypoxemiaAlert(patient);
+      assertEquals(expected, actual);
+    }
+
+  }
+
+  @Nested
+  @DisplayName("ECG Data Alerts")
+  class ECGDataEvaluationTest {
+    // create a new patient and add the records manually
+    // all the tests should have been written this way initially, but it's too late now
+
+    @Test
+    @DisplayName("Abnormal ECG Data Alert")
+    void testAbnormalDataAlert() {
+      Patient patient = new Patient(1);
+      long timestamp;
+      patient.addRecord(0.1, "ECG",
+          System.currentTimeMillis() - 5000);
+      patient.addRecord(0.2, "ECG",
+          System.currentTimeMillis() - 4000);
+      patient.addRecord(0.3, "ECG",
+          System.currentTimeMillis() - 3000);
+      patient.addRecord(0.4, "ECG",
+          System.currentTimeMillis() - 2000);
+      patient.addRecord(0.5, "ECG",
+          System.currentTimeMillis() - 1000);
+      patient.addRecord(2, "ECG",
+          timestamp = System.currentTimeMillis());
+
+      Alert expected = new Alert(String.valueOf(patient.getId()),
+          "ECG PEAK ALERT", timestamp);
+      Alert actual = alertGenerator.ecgAlert(patient);
+
+      assertEquals(expected, actual);
+    }
+
+  }
+
+
+
 
   /**
    * <p>Helper method only used in a testing context,
