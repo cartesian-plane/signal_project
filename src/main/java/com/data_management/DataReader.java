@@ -8,7 +8,7 @@ import org.java_websocket.server.WebSocketServer;
 public interface DataReader {
 
   /**
-   * Reads data from a given {@link WebSocketServer} and stores it in the data storage.
+   * Constantly reads data from a given {@link WebSocketServer} and stores it in the data storage.
    * This allows for more efficient real-time data transfers.
    * @param serverUri the URI of the server (i.e. {@code ws://localhost:8080})
    * @param dataStorage the storage to write to

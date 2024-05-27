@@ -12,7 +12,7 @@ import com.alerts.AlertGenerator;
  */
 public class DataStorage {
 
-  private Map<Integer, Patient> patientMap; // Stores patient objects indexed by their unique patient ID.
+  private final Map<Integer, Patient> patientMap; // Stores patient objects indexed by their unique patient ID.
 
 
   /**

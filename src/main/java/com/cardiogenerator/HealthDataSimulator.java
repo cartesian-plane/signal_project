@@ -1,5 +1,7 @@
 package com.cardiogenerator;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -15,8 +17,10 @@ import com.cardiogenerator.outputs.FileOutputStrategy;
 import com.cardiogenerator.outputs.OutputStrategy;
 import com.cardiogenerator.outputs.TcpOutputStrategy;
 import com.cardiogenerator.outputs.WebSocketOutputStrategy;
+import com.data_management.DataStorage;
 import com.data_management.Patient;
 import com.data_management.PatientRecord;
+import com.data_management.Reader;
 
 import java.util.Collections;
 import java.util.List;
@@ -60,6 +64,13 @@ public class HealthDataSimulator {
         Collections.shuffle(patientIds);
 
         scheduleTasksForPatients(patientIds);
+        var dataStorage = new DataStorage();
+        var reader = new Reader();
+      try {
+        reader.readDataFromWebSocket(new URI("ws://localhost:8080"), dataStorage);
+      } catch (URISyntaxException e) {
+        throw new RuntimeException(e);
+      }
     }
 
     /** Parses the user's arguments */

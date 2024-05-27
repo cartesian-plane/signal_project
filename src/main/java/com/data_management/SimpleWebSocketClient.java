@@ -2,15 +2,22 @@ package com.data_management;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.ByteBuffer;
-
+import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.LinkedBlockingDeque;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft;
-import org.java_websocket.drafts.Draft_6455;
 import org.java_websocket.handshake.ServerHandshake;
 
+/**
+ *
+ */
 public class SimpleWebSocketClient extends WebSocketClient {
 
+  // with a BlockingQueue of size 1000, the Reader will never miss a message
+  // ~600 patients is where it starts to break down (no more stack space for threads)
+  // given this upper bound, there's no need to optimise this further;
+  // (the bottleneck is due to the patient threads themselves)
+  public final BlockingDeque<String> messages = new LinkedBlockingDeque<>(1000);
 
   public static void main(String[] args) throws URISyntaxException {
     WebSocketClient client = new SimpleWebSocketClient(new URI("ws://localhost:8080"));
@@ -31,8 +38,8 @@ public class SimpleWebSocketClient extends WebSocketClient {
   }
 
   @Override
-  public void onMessage(String s) {
-
+  public void onMessage(String message) {
+    messages.add(message);
   }
 
   @Override
