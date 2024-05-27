@@ -5,6 +5,9 @@ import org.java_websocket.server.WebSocketServer;
 
 import java.net.InetSocketAddress;
 
+/**
+ * Sets up a WebSocket server.
+ */
 public class WebSocketOutputStrategy implements OutputStrategy {
 
   private WebSocketServer server;
@@ -14,6 +17,19 @@ public class WebSocketOutputStrategy implements OutputStrategy {
     System.out.println(
         "WebSocket server created on port: " + port + ", listening for connections...");
     server.start();
+
+    // shutdown hook to ensure the websocket is properly closed
+    Thread shutdownSocket = new Thread(() -> {
+      System.out.println("Stopping WebSocket server...");
+      try {
+        server.stop();
+        System.out.println("Stopped successfully!");
+      } catch (InterruptedException e) {
+        System.out.println("Error when closing server");
+        throw new RuntimeException(e);
+      }
+    });
+    Runtime.getRuntime().addShutdownHook(shutdownSocket);
   }
 
   @Override
