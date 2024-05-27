@@ -52,7 +52,7 @@ class AlertGeneratorTest {
       correctTimestamps(diastolicPressureData);
 
       try {
-        reader.readData(diastolicPressureData, dataStorage);
+        reader.readDataFromFile(diastolicPressureData, dataStorage);
       } catch (IOException e) {
         System.out.println("Could not read from file");
         e.printStackTrace();
@@ -78,7 +78,7 @@ class AlertGeneratorTest {
       correctTimestamps(diastolicPressureData);
 
       try {
-        reader.readData(diastolicPressureData, dataStorage);
+        reader.readDataFromFile(diastolicPressureData, dataStorage);
       } catch (IOException e) {
         System.out.println("Could not read from file");
         e.printStackTrace();
@@ -104,7 +104,7 @@ class AlertGeneratorTest {
       correctTimestamps(diastolicPressureData);
 
       try {
-        reader.readData(diastolicPressureData, dataStorage);
+        reader.readDataFromFile(diastolicPressureData, dataStorage);
       } catch (IOException e) {
         System.out.println("Could not read from file");
         e.printStackTrace();
@@ -130,7 +130,7 @@ class AlertGeneratorTest {
       correctTimestamps(diastolicPressureData);
 
       try {
-        reader.readData(diastolicPressureData, dataStorage);
+        reader.readDataFromFile(diastolicPressureData, dataStorage);
       } catch (IOException e) {
         System.out.println("Could not read from file");
         e.printStackTrace();
@@ -156,7 +156,7 @@ class AlertGeneratorTest {
       correctTimestamps(diastolicPressureData);
 
       try {
-        reader.readData(diastolicPressureData, dataStorage);
+        reader.readDataFromFile(diastolicPressureData, dataStorage);
       } catch (IOException e) {
         System.out.println("Could not read from file");
         e.printStackTrace();
@@ -180,7 +180,7 @@ class AlertGeneratorTest {
       correctTimestamps(systolicPressureData);
 
       try {
-        reader.readData(systolicPressureData, dataStorage);
+        reader.readDataFromFile(systolicPressureData, dataStorage);
       } catch (IOException e) {
         System.out.println("Could not read from file");
         e.printStackTrace();
@@ -207,7 +207,7 @@ class AlertGeneratorTest {
       correctTimestamps(systolicPressureData);
 
       try {
-        reader.readData(systolicPressureData, dataStorage);
+        reader.readDataFromFile(systolicPressureData, dataStorage);
       } catch (IOException e) {
         System.out.println("Could not read from file");
         e.printStackTrace();
@@ -233,7 +233,7 @@ class AlertGeneratorTest {
       correctTimestamps(systolicPressureData);
 
       try {
-        reader.readData(systolicPressureData, dataStorage);
+        reader.readDataFromFile(systolicPressureData, dataStorage);
       } catch (IOException e) {
         System.out.println("Could not read from file");
         e.printStackTrace();
@@ -259,7 +259,7 @@ class AlertGeneratorTest {
       correctTimestamps(systolicPressureData);
 
       try {
-        reader.readData(systolicPressureData, dataStorage);
+        reader.readDataFromFile(systolicPressureData, dataStorage);
       } catch (IOException e) {
         System.out.println("Could not read from file");
         e.printStackTrace();
@@ -285,7 +285,7 @@ class AlertGeneratorTest {
       correctTimestamps(systolicPressureData);
 
       try {
-        reader.readData(systolicPressureData, dataStorage);
+        reader.readDataFromFile(systolicPressureData, dataStorage);
       } catch (IOException e) {
         System.out.println("Could not read from file");
         e.printStackTrace();
@@ -319,7 +319,7 @@ class AlertGeneratorTest {
       correctTimestamps(saturationData);
 
       try {
-        reader.readData(saturationData, dataStorage);
+        reader.readDataFromFile(saturationData, dataStorage);
       } catch (IOException e) {
         System.out.println("Could not read from file");
         e.printStackTrace();
@@ -345,7 +345,7 @@ class AlertGeneratorTest {
       correctTimestamps(saturationData);
 
       try {
-        reader.readData(saturationData, dataStorage);
+        reader.readDataFromFile(saturationData, dataStorage);
       } catch (IOException e) {
         System.out.println("Could not read from file");
         e.printStackTrace();
@@ -372,7 +372,7 @@ class AlertGeneratorTest {
       correctTimestamps(saturationData);
 
       try {
-        reader.readData(saturationData, dataStorage);
+        reader.readDataFromFile(saturationData, dataStorage);
       } catch (IOException e) {
         System.out.println("Could not read from file");
         e.printStackTrace();
@@ -409,8 +409,8 @@ class AlertGeneratorTest {
       correctTimestamps(systolicPressureData);
 
       try {
-        reader.readData(saturationData, dataStorage);
-        reader.readData(systolicPressureData, dataStorage);
+        reader.readDataFromFile(saturationData, dataStorage);
+        reader.readDataFromFile(systolicPressureData, dataStorage);
       } catch (IOException e) {
         System.out.println("Could not read from file");
         e.printStackTrace();

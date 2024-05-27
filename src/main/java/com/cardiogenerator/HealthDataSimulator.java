@@ -97,9 +97,15 @@ public class HealthDataSimulator {
                         } else if (outputArg.startsWith("websocket:")) {
                             try {
                                 int port = Integer.parseInt(outputArg.substring(10));
-                                // Initialize your WebSocket output strategy here
-                                outputStrategy = new WebSocketOutputStrategy(port);
-                                System.out.println("WebSocket output will be on port: " + port);
+                                if (0 < port && port < 65535) {
+                                  // Initialize your WebSocket output strategy here
+                                  outputStrategy = new WebSocketOutputStrategy(port);
+                                  System.out.println("WebSocket output will be on port: " + port);
+                                } else {
+                                  System.out.println("Invalid port number!");
+                                  System.exit(-1);
+                                }
+
                             } catch (NumberFormatException e) {
                                 System.err.println(
                                         "Invalid port for WebSocket output." +

@@ -4,11 +4,17 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.URI;
 
 public class Reader implements DataReader {
 
   @Override
-  public void readData(File source, DataStorage dataStorage) throws IOException {
+  public void readDataFromWebSocket(URI serverUri, DataStorage dataStorage) {
+
+  }
+
+  @Override
+  public void readDataFromFile(File source, DataStorage dataStorage) throws IOException {
     try (BufferedReader reader = new BufferedReader(new FileReader(source))) {
       String line = "";
 

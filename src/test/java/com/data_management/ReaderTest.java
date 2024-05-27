@@ -5,9 +5,6 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -15,7 +12,7 @@ class ReaderTest {
 
   @Test
   @DisplayName("Read and pass to DataStorage")
-  void testReadData() {
+  void testReadDataFromFile() {
     DataStorage dataStorage = new DataStorage();
     Reader reader = new Reader();
 
@@ -25,7 +22,7 @@ class ReaderTest {
     File testFile = new File(resourcesDirectory, "RedBloodCells.txt");
 
     try {
-      reader.readData(testFile, dataStorage);
+      reader.readDataFromFile(testFile, dataStorage);
 
       // the expected values were manually copied from the text file
       var firstPatientRecord = dataStorage.getRecords(15, 1,
