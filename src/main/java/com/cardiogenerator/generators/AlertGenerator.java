@@ -46,7 +46,7 @@ public class AlertGenerator implements PatientDataGenerator {
           alertStates[patientId] = false;
           // Output the alert
           outputStrategy.output(patientId, System.currentTimeMillis(),
-              "Alert", "resolved"); // Line wrapped to not exceed 100 characters (4.4)
+              "Alert", "0"); // Line wrapped to not exceed 100 characters (4.4)
         }
       } else {
         // Lambda was renamed to lambda because local variable names
@@ -62,7 +62,9 @@ public class AlertGenerator implements PatientDataGenerator {
           alertStates[patientId] = true;
           // Output the alert
           outputStrategy.output(patientId, System.currentTimeMillis(),
-              "Alert", "triggered"); // Line wrapped to not exceed 100 characters (4.4)
+              // 1 means triggered, 0 means resolved
+              // this was the easiest fix, to avoid having to refactor even more code
+              "Alert", "1"); // Line wrapped to not exceed 100 characters (4.4)
         }
       }
     } catch (Exception e) {
