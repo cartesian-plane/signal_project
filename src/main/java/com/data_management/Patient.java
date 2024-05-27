@@ -36,9 +36,20 @@ public class Patient {
    * @param timestamp        the time at which the measurement was taken, in milliseconds since UNIX
    *                         epoch
    */
+  @Deprecated
   public void addRecord(double measurementValue, String recordType, long timestamp) {
     PatientRecord record = new PatientRecord(this.patientId, measurementValue, recordType,
         timestamp);
+    this.patientRecords.add(record);
+  }
+
+  /**
+   * Adds a new {@link PatientRecord} to this patient's list of medical records.
+   *
+   * @param record containing all the necessary information
+   */
+  public void addPatientData(PatientRecord record) {
+    //TODO make this method replace the addRecord(), if the time allows for refactoring
     this.patientRecords.add(record);
   }
 

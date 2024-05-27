@@ -66,14 +66,25 @@ public class DataStorage {
    * @param recordType       the type of record, e.g., "HeartRate", "BloodPressure"
    * @param measurementValue the value of the health metric being recorded
    */
+  @Deprecated
   public void addPatientData(int patientId, long timestamp, String recordType,
       double measurementValue) {
-    Patient patient = patientMap.get(patientId);
-    if (patient == null) {
-      patient = new Patient(patientId);
-      patientMap.put(patientId, patient);
-    }
+    Patient patient = patientMap.computeIfAbsent(patientId, Patient::new);
     patient.addRecord(measurementValue, recordType, timestamp);
+  }
+
+  /**
+   * Adds or updates a {@link PatientRecord} in storage.
+   * <p>If the patient does not exist, a new Patient object is created and added to the storage.
+   *   Otherwise, the new data is added to the existing patient's records.</p>
+   *
+   * @param record containing the necessary information
+   */
+  public void addPatientRecord(PatientRecord record) {
+    //TODO make this method replace the addPatientData(), if the time allows for refactoring
+    int patientId = record.patientId();
+    Patient patient = patientMap.computeIfAbsent(patientId, Patient::new);
+    patient.addPatientData(record);
   }
 
   /**
