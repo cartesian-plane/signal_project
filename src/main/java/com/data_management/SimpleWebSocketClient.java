@@ -9,7 +9,11 @@ import org.java_websocket.drafts.Draft;
 import org.java_websocket.handshake.ServerHandshake;
 
 /**
- *
+ * Sets up a WebSocket client, to retrieve the generated data.
+ * <p>
+ *   This client only contains logic for the retrieval of messages, leaving parsing & storage
+ *   up to the {@link DataReader}.
+ * </p>
  */
 public class SimpleWebSocketClient extends WebSocketClient {
 
@@ -50,6 +54,10 @@ public class SimpleWebSocketClient extends WebSocketClient {
 
   @Override
   public void onError(Exception ex) {
+    // not much to do in the case of message corruption,
+    // as the protocol takes care of that by itself
+    // https://datatracker.ietf.org/doc/html/rfc6455#section-5
+    messages.clear();
     System.err.println("an error occurred:" + ex);
 
   }

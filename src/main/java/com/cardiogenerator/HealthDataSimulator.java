@@ -52,6 +52,7 @@ public class HealthDataSimulator {
     // Fix line wrapping
     private static OutputStrategy outputStrategy = new ConsoleOutputStrategy();
     private static final Random random = new Random();
+    private static int PORT;
 
     public static void main(String[] args) throws IOException {
 
@@ -67,7 +68,7 @@ public class HealthDataSimulator {
         var dataStorage = new DataStorage();
         var reader = new Reader();
       try {
-        reader.readDataFromWebSocket(new URI("ws://localhost:8080"), dataStorage);
+        reader.readDataFromWebSocket(new URI("ws://localhost:" + PORT), dataStorage);
       } catch (URISyntaxException e) {
         throw new RuntimeException(e);
       }
@@ -107,11 +108,11 @@ public class HealthDataSimulator {
                             outputStrategy = new FileOutputStrategy(baseDirectory);
                         } else if (outputArg.startsWith("websocket:")) {
                             try {
-                                int port = Integer.parseInt(outputArg.substring(10));
-                                if (0 < port && port < 65535) {
+                                PORT = Integer.parseInt(outputArg.substring(10));
+                                if (0 < PORT && PORT < 65535) {
                                   // Initialize your WebSocket output strategy here
-                                  outputStrategy = new WebSocketOutputStrategy(port);
-                                  System.out.println("WebSocket output will be on port: " + port);
+                                  outputStrategy = new WebSocketOutputStrategy(PORT);
+                                  System.out.println("WebSocket output will be on port: " + PORT);
                                 } else {
                                   System.out.println("Invalid port number!");
                                   System.exit(-1);

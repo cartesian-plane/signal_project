@@ -9,7 +9,7 @@ import org.java_websocket.server.WebSocketServer;
 import java.net.InetSocketAddress;
 
 /**
- * Sets up a WebSocket server.
+ * Sets up a WebSocket server that broadcasts generated data to all clients.
  */
 public class WebSocketOutputStrategy implements OutputStrategy {
 
@@ -40,7 +40,6 @@ public class WebSocketOutputStrategy implements OutputStrategy {
 
   @Override
   public void output(int patientId, long timestamp, String label, String data) {
-    String message = String.format("%d ,%d ,%s ,%s", patientId, timestamp, label, data);
     data = data.replace("%", ""); // clean up the trailing %
     var record = new PatientRecord(patientId, Double.parseDouble(data), label, timestamp);
     String messageJson;
@@ -79,6 +78,9 @@ public class WebSocketOutputStrategy implements OutputStrategy {
 
     @Override
     public void onError(WebSocket conn, Exception ex) {
+      // not much to do in the case of message corruption,
+      // as the protocol takes care of that by itself
+      // https://datatracker.ietf.org/doc/html/rfc6455#section-5
       ex.printStackTrace();
     }
 

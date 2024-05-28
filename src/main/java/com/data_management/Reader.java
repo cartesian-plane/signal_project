@@ -30,7 +30,6 @@ public class Reader implements DataReader {
         String message = client.messages.poll();
         if (message != null) {
           try {
-            System.out.println("blockqueue size = " + client.messages.size());
             var record = objectMapper.readValue(message, PatientRecord.class);
             dataStorage.addPatientRecord(record);
           } catch (IOException e) {
