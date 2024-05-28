@@ -45,4 +45,10 @@ class ReaderTest {
       e.printStackTrace();
     }
   }
+
+  @Test
+  @DisplayName("Read data from Websocket")
+  void readDataFromWebSocket() {
+  }
+
 }
