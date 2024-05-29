@@ -2,16 +2,23 @@ package com.data_management;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.timeout;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 class ReaderTest {
 
   @Test
-  @DisplayName("Read and pass to DataStorage")
+  @DisplayName("Read from File and pass to DataStorage")
   void testReadDataFromFile() {
     DataStorage dataStorage = new DataStorage();
     Reader reader = new Reader();
@@ -47,8 +54,28 @@ class ReaderTest {
   }
 
   @Test
-  @DisplayName("Read data from Websocket")
+  @DisplayName("Get data from WebsocketClient and pass to DataStorage")
   void readDataFromWebSocket() {
+//    SimpleWebSocketClient clientMock = mock(SimpleWebSocketClient.class);
+//    DataStorage dataStorageMock = mock(DataStorage.class);
+//    Reader reader = new Reader();
+//
+//    LinkedBlockingQueue<String> messages = new LinkedBlockingQueue<>();
+//    messages.add("{\"patientId\":15,\"measurementValue\":4.641559693126796,\"label\":\"RedBloodCells\",\"timestamp\":1715519279864}");
+//
+//    when(clientMock.messages).thenReturn(messages);
+//
+//    // Act
+//    reader.readDataFromWebSocket(new URI("ws://localhost:8080"), dataStorageMock);
+//
+//    // Assert
+//    ArgumentCaptor<PatientRecord> argumentCaptor = ArgumentCaptor.forClass(PatientRecord.class);
+//    verify(dataStorageMock, timeout(1000)).addPatientRecord(argumentCaptor.capture());
+//
+//    PatientRecord actualRecord = argumentCaptor.getValue();
+//    PatientRecord expectedRecord = new PatientRecord(15, 4.641559693126796,
+//        "RedBloodCells", 1715519279864L);
+//
+//    assertEquals(expectedRecord, actualRecord);
   }
-
 }
