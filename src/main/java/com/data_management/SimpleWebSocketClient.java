@@ -4,6 +4,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Random;
 import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.TimeUnit;
 import org.java_websocket.client.WebSocketClient;
@@ -23,7 +24,7 @@ public class SimpleWebSocketClient extends WebSocketClient {
   // ~600 patients is where it starts to break down (no more stack space for threads)
   // given this upper bound, there's no need to optimise this further;
   // (the bottleneck is due to the patient threads themselves)
-  public final BlockingDeque<String> messages = new LinkedBlockingDeque<>(1000);
+  public final BlockingQueue<String> messages = new LinkedBlockingDeque<>(1000);
 
   public static void main(String[] args) throws URISyntaxException {
     WebSocketClient client = new SimpleWebSocketClient(new URI("ws://localhost:8080"));
@@ -57,7 +58,7 @@ public class SimpleWebSocketClient extends WebSocketClient {
     switch (code) {
       // code 1012: https://mailarchive.ietf.org/arch/msg/hybi/P_1vbD9uyHl63nbIIbFxKMfSwcM/
       case 1012 -> {
-        System.out.println("Attempting to reconnect with randomized delay");
+        System.out.println("Attempting to reconnect with randomized delay of 5-30s");
         Random random = new Random();
         int delay = 5 + random.nextInt(26);
 
@@ -85,5 +86,9 @@ public class SimpleWebSocketClient extends WebSocketClient {
     messages.clear();
     System.err.println("an error occurred:" + ex);
 
+  }
+
+  public BlockingQueue<String> getMessages() {
+    return messages;
   }
 }

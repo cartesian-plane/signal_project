@@ -5,7 +5,7 @@ import org.java_websocket.server.WebSocketServer;
 
 import java.net.InetSocketAddress;
 
-class SimpleWebSocketServer extends WebSocketServer {
+public class SimpleWebSocketServer extends WebSocketServer {
 
   public SimpleWebSocketServer(InetSocketAddress address) {
     super(address);
