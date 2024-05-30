@@ -51,7 +51,6 @@ public class SimpleWebSocketClient extends WebSocketClient {
 
   @Override
   public void onClose(int code, String reason, boolean remote) {
-    //TODO make it attempt reconnection if it was disconnected for a weird reason
     // see
     // https://github.com/TooTallNate/Java-WebSocket/blob/c793f3402ed26557dd517c22f1b69b1c3ce9aa38/src/main/java/org/java_websocket/client/WebSocketClient.java#L799
     System.out.println("closed with exit code " + code + " additional info: " + reason);
