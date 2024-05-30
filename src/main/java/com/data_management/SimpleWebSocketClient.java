@@ -2,8 +2,10 @@ package com.data_management;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Random;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.TimeUnit;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft;
 import org.java_websocket.handshake.ServerHandshake;
@@ -28,6 +30,7 @@ public class SimpleWebSocketClient extends WebSocketClient {
     client.connect();
   }
 
+  @SuppressWarnings("unused")
   public SimpleWebSocketClient(URI serverUri, Draft draft) {
     super(serverUri, draft);
   }
@@ -48,7 +51,30 @@ public class SimpleWebSocketClient extends WebSocketClient {
 
   @Override
   public void onClose(int code, String reason, boolean remote) {
+    //TODO make it attempt reconnection if it was disconnected for a weird reason
+    // see
+    // https://github.com/TooTallNate/Java-WebSocket/blob/c793f3402ed26557dd517c22f1b69b1c3ce9aa38/src/main/java/org/java_websocket/client/WebSocketClient.java#L799
     System.out.println("closed with exit code " + code + " additional info: " + reason);
+    switch (code) {
+      // code 1012: https://mailarchive.ietf.org/arch/msg/hybi/P_1vbD9uyHl63nbIIbFxKMfSwcM/
+      case 1012 -> {
+        System.out.println("Attempting to reconnect with randomized delay");
+        Random random = new Random();
+        int delay = 5 + random.nextInt(26);
+
+        try {
+          TimeUnit.SECONDS.sleep(delay);
+        } catch (InterruptedException e) {
+          System.err.println("Reconnection attempt interrupted: " + e);
+          throw new RuntimeException(e);
+        }
+        this.reconnect();
+      }
+      case 1007 -> System.out.println("data not consistent with the type of message");
+      case 1009 -> System.out.println("Message is too big");
+
+
+    }
 
   }
 
