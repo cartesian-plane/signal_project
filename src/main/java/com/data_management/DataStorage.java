@@ -135,6 +135,6 @@ public class DataStorage {
   }
 
   public void clearData() {
-    patientMap = new HashMap<Integer, Patient>();
+    patientMap = new HashMap<>();
   }
 }
