@@ -170,7 +170,7 @@ class ReaderTest {
       assertEquals(expectedRecord, actualRecord);
 
       Patient testPatient = new Patient(15);
-      var expectedAlert = new Alert("15",
+      var expectedAlert = new Alert(15,
           "CRITICAL: HIGH SYSTOLIC PRESSURE" ,timestamp);
       var actualAlert = alertGenerator.bloodPressureAlert(testPatient);
       assertEquals(expectedAlert, actualAlert);

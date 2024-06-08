@@ -59,10 +59,10 @@ class AlertGeneratorTest {
       }
 
       // patient of interest
-      String patientId = String.valueOf(dataStorage.getAllPatients().getFirst().getId());
-      List<PatientRecord> records = dataStorage.getRecords(Integer.parseInt(patientId));
+      int patientId = dataStorage.getAllPatients().getFirst().getId();
+      List<PatientRecord> records = dataStorage.getRecords(patientId);
       long timestamp = records.getFirst().timestamp();
-      Patient patient = new Patient(Integer.parseInt(patientId));
+      Patient patient = new Patient(patientId);
 
       Alert expected = new Alert(patientId, "CRITICAL: LOW DIASTOLIC PRESSURE",
           timestamp);
@@ -85,10 +85,10 @@ class AlertGeneratorTest {
       }
 
       // patient of interest
-      String patientId = String.valueOf(dataStorage.getAllPatients().getFirst().getId());
-      List<PatientRecord> records = dataStorage.getRecords(Integer.parseInt(patientId));
+      int patientId = dataStorage.getAllPatients().getFirst().getId();
+      List<PatientRecord> records = dataStorage.getRecords(patientId);
       long timestamp = records.getFirst().timestamp();
-      Patient patient = new Patient(Integer.parseInt(patientId));
+      Patient patient = new Patient(patientId);
 
       Alert expected = new Alert(patientId, "CRITICAL: HIGH DIASTOLIC PRESSURE",
           timestamp);
@@ -111,10 +111,10 @@ class AlertGeneratorTest {
       }
 
       // patient of interest
-      String patientId = String.valueOf(dataStorage.getAllPatients().getFirst().getId());
-      List<PatientRecord> records = dataStorage.getRecords(Integer.parseInt(patientId));
+      int patientId = dataStorage.getAllPatients().getFirst().getId();
+      List<PatientRecord> records = dataStorage.getRecords(patientId);
       long timestamp = records.getFirst().timestamp();
-      Patient patient = new Patient(Integer.parseInt(patientId));
+      Patient patient = new Patient(patientId);
 
       Alert expected = new Alert(patientId, "TREND: DECREASING DIASTOLIC PRESSURE",
           timestamp);
@@ -137,10 +137,10 @@ class AlertGeneratorTest {
       }
 
       // patient of interest
-      String patientId = String.valueOf(dataStorage.getAllPatients().getFirst().getId());
-      List<PatientRecord> records = dataStorage.getRecords(Integer.parseInt(patientId));
+      int patientId = dataStorage.getAllPatients().getFirst().getId();
+      List<PatientRecord> records = dataStorage.getRecords(patientId);
       long timestamp = records.getFirst().timestamp();
-      Patient patient = new Patient(Integer.parseInt(patientId));
+      Patient patient = new Patient(patientId);
 
       Alert expected = new Alert(patientId, "TREND: INCREASING DIASTOLIC PRESSURE",
           timestamp);
@@ -163,10 +163,10 @@ class AlertGeneratorTest {
       }
 
       // patient of interest
-      String patientId = String.valueOf(dataStorage.getAllPatients().getFirst().getId());
-      List<PatientRecord> records = dataStorage.getRecords(Integer.parseInt(patientId));
+      int patientId = dataStorage.getAllPatients().getFirst().getId();
+      List<PatientRecord> records = dataStorage.getRecords(patientId);
       long timestamp = records.getFirst().timestamp();
-      Patient patient = new Patient(Integer.parseInt(patientId));
+      Patient patient = new Patient(patientId);
 
       Alert actual = alertGenerator.bloodPressureAlert(patient);
       assertNull(actual);
@@ -187,10 +187,10 @@ class AlertGeneratorTest {
       }
 
       // patient of interest
-      String patientId = String.valueOf(dataStorage.getAllPatients().getFirst().getId());
-      List<PatientRecord> records = dataStorage.getRecords(Integer.parseInt(patientId));
+      int patientId = dataStorage.getAllPatients().getFirst().getId();
+      List<PatientRecord> records = dataStorage.getRecords(patientId);
       long timestamp = records.getFirst().timestamp();
-      Patient patient = new Patient(Integer.parseInt(patientId));
+      Patient patient = new Patient(patientId);
 
       Alert expected = new Alert(patientId, "CRITICAL: LOW SYSTOLIC PRESSURE",
           timestamp);
@@ -214,10 +214,10 @@ class AlertGeneratorTest {
       }
 
       // patient of interest
-      String patientId = String.valueOf(dataStorage.getAllPatients().getFirst().getId());
-      List<PatientRecord> records = dataStorage.getRecords(Integer.parseInt(patientId));
+      int patientId = dataStorage.getAllPatients().getFirst().getId();
+      List<PatientRecord> records = dataStorage.getRecords(patientId);
       long timestamp = records.getFirst().timestamp();
-      Patient patient = new Patient(Integer.parseInt(patientId));
+      Patient patient = new Patient(patientId);
 
       Alert expected = new Alert(patientId, "CRITICAL: HIGH SYSTOLIC PRESSURE",
           timestamp);
@@ -240,10 +240,10 @@ class AlertGeneratorTest {
       }
 
       // patient of interest
-      String patientId = String.valueOf(dataStorage.getAllPatients().getFirst().getId());
-      List<PatientRecord> records = dataStorage.getRecords(Integer.parseInt(patientId));
+      int patientId = dataStorage.getAllPatients().getFirst().getId();
+      List<PatientRecord> records = dataStorage.getRecords(patientId);
       long timestamp = records.getFirst().timestamp();
-      Patient patient = new Patient(Integer.parseInt(patientId));
+      Patient patient = new Patient(patientId);
 
       Alert expected = new Alert(patientId, "TREND: INCREASING SYSTOLIC PRESSURE",
           timestamp);
@@ -266,10 +266,10 @@ class AlertGeneratorTest {
       }
 
       // patient of interest
-      String patientId = String.valueOf(dataStorage.getAllPatients().getFirst().getId());
-      List<PatientRecord> records = dataStorage.getRecords(Integer.parseInt(patientId));
+      int patientId = dataStorage.getAllPatients().getFirst().getId();
+      List<PatientRecord> records = dataStorage.getRecords(patientId);
       long timestamp = records.getFirst().timestamp();
-      Patient patient = new Patient(Integer.parseInt(patientId));
+      Patient patient = new Patient(patientId);
 
       Alert expected = new Alert(patientId, "TREND: DECREASING SYSTOLIC PRESSURE",
           timestamp);
@@ -292,10 +292,10 @@ class AlertGeneratorTest {
       }
 
       // patient of interest
-      String patientId = String.valueOf(dataStorage.getAllPatients().getFirst().getId());
-      List<PatientRecord> records = dataStorage.getRecords(Integer.parseInt(patientId));
+      int patientId = dataStorage.getAllPatients().getFirst().getId();
+      List<PatientRecord> records = dataStorage.getRecords(patientId);
       long timestamp = records.getFirst().timestamp();
-      Patient patient = new Patient(Integer.parseInt(patientId));
+      Patient patient = new Patient(patientId);
 
       Alert actual = alertGenerator.bloodPressureAlert(patient);
       assertNull(actual);
@@ -326,10 +326,10 @@ class AlertGeneratorTest {
       }
 
       // patient of interest
-      String patientId = String.valueOf(dataStorage.getAllPatients().getFirst().getId());
-      List<PatientRecord> records = dataStorage.getRecords(Integer.parseInt(patientId));
+      int patientId = dataStorage.getAllPatients().getFirst().getId();
+      List<PatientRecord> records = dataStorage.getRecords(patientId);
       long timestamp = records.getFirst().timestamp();
-      Patient patient = new Patient(Integer.parseInt(patientId));
+      Patient patient = new Patient(patientId);
 
       Alert expected = new Alert(patientId, "CRITICAL: LOW SATURATION",
           timestamp);
@@ -352,10 +352,10 @@ class AlertGeneratorTest {
       }
 
       // patient of interest
-      String patientId = String.valueOf(dataStorage.getAllPatients().getFirst().getId());
-      List<PatientRecord> records = dataStorage.getRecords(Integer.parseInt(patientId));
+      int patientId = dataStorage.getAllPatients().getFirst().getId();
+      List<PatientRecord> records = dataStorage.getRecords(patientId);
       long timestamp = records.getFirst().timestamp();
-      Patient patient = new Patient(Integer.parseInt(patientId));
+      Patient patient = new Patient(patientId);
 
       Alert expected = new Alert(patientId, "TREND: RAPID SATURATION DROP",
           timestamp);
@@ -379,10 +379,10 @@ class AlertGeneratorTest {
       }
 
       // patient of interest
-      String patientId = String.valueOf(dataStorage.getAllPatients().getFirst().getId());
-      List<PatientRecord> records = dataStorage.getRecords(Integer.parseInt(patientId));
+      int patientId = dataStorage.getAllPatients().getFirst().getId();
+      List<PatientRecord> records = dataStorage.getRecords(patientId);
       long timestamp = records.getFirst().timestamp();
-      Patient patient = new Patient(Integer.parseInt(patientId));
+      Patient patient = new Patient(patientId);
 
       Alert actual = alertGenerator.bloodSaturationAlert(patient);
       assertNull(actual);
@@ -417,10 +417,10 @@ class AlertGeneratorTest {
       }
 
       // patient of interest
-      String patientId = String.valueOf(dataStorage.getAllPatients().getFirst().getId());
-      List<PatientRecord> records = dataStorage.getRecords(Integer.parseInt(patientId));
+      int patientId = dataStorage.getAllPatients().getFirst().getId();
+      List<PatientRecord> records = dataStorage.getRecords(patientId);
       long timestamp = records.getFirst().timestamp();
-      Patient patient = new Patient(Integer.parseInt(patientId));
+      Patient patient = new Patient(patientId);
 
       Alert expected = new Alert(patientId, "CRITICAL: HYPOTENSIVE HYPOXEMIA",
           timestamp);
@@ -454,7 +454,7 @@ class AlertGeneratorTest {
       patient.addRecord(2, "ECG",
           timestamp = System.currentTimeMillis());
 
-      Alert expected = new Alert(String.valueOf(patient.getId()),
+      Alert expected = new Alert(patient.getId(),
           "ECG PEAK ALERT", timestamp);
       Alert actual = alertGenerator.ecgAlert(patient);
 

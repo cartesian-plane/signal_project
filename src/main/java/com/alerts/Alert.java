@@ -3,17 +3,17 @@ package com.alerts;
 // Represents an alert
 public class Alert {
 
-  private String patientId;
+  private int patientId;
   private String condition;
   private long timestamp;
 
-  public Alert(String patientId, String condition, long timestamp) {
+  public Alert(int patientId, String condition, long timestamp) {
     this.patientId = patientId;
     this.condition = condition;
     this.timestamp = timestamp;
   }
 
-  public String getPatientId() {
+  public int getPatientId() {
     return patientId;
   }
 
@@ -35,7 +35,7 @@ public class Alert {
   public boolean equals(Object alert) {
     if (alert instanceof Alert) {
       Alert other = (Alert) alert;
-      return this.patientId.equals(other.patientId) && this.condition.equals(other.condition) && this.timestamp == other.timestamp;
+      return (this.patientId == other.patientId) && this.condition.equals(other.condition) && this.timestamp == other.timestamp;
     } else {
       return false;
     }

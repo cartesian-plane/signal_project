@@ -91,18 +91,18 @@ public class AlertGenerator {
       // Critical alert: diastolic & systolic
       if (record1.recordType().equalsIgnoreCase("DiastolicPressure")) {
         if (record1.measurementValue() < 60) {
-          return new Alert(String.valueOf(patient.getId()),
+          return new Alert(patient.getId(),
               "CRITICAL: LOW DIASTOLIC PRESSURE", record1.timestamp());
         } else if (record1.measurementValue() > 120) {
-          return new Alert(String.valueOf(patient.getId()),
+          return new Alert(patient.getId(),
               "CRITICAL: HIGH DIASTOLIC PRESSURE", record1.timestamp());
         }
       } else if (record1.recordType().equalsIgnoreCase("SystolicPressure")) {
         if (record1.measurementValue() < 90) {
-          return new Alert(String.valueOf(patient.getId()),
+          return new Alert(patient.getId(),
               "CRITICAL: LOW SYSTOLIC PRESSURE", record1.timestamp());
         } else if (record1.measurementValue() > 180) {
-          return new Alert(String.valueOf(patient.getId()),
+          return new Alert(patient.getId(),
               "CRITICAL: HIGH SYSTOLIC PRESSURE", record1.timestamp());
         }
       }
@@ -119,10 +119,10 @@ public class AlertGenerator {
             Math.abs(change2) > 10 &&
             Math.signum(change1) == Math.signum(change2)) {
           if (Math.signum(change1) > 0) {
-            return new Alert(String.valueOf(patient.getId()),
+            return new Alert(patient.getId(),
                 "TREND: INCREASING DIASTOLIC PRESSURE", record1.timestamp());
           } else {
-            return new Alert(String.valueOf(patient.getId()),
+            return new Alert(patient.getId(),
                 "TREND: DECREASING DIASTOLIC PRESSURE", record1.timestamp());
           }
         }
@@ -140,10 +140,10 @@ public class AlertGenerator {
             Math.abs(change2) > 10 &&
             Math.signum(change1) == Math.signum(change2)) {
           if (Math.signum(change1) > 0) {
-            return new Alert(String.valueOf(patient.getId()),
+            return new Alert(patient.getId(),
                 "TREND: INCREASING SYSTOLIC PRESSURE", record1.timestamp());
           } else {
-            return new Alert(String.valueOf(patient.getId()),
+            return new Alert(patient.getId(),
                 "TREND: DECREASING SYSTOLIC PRESSURE", record1.timestamp());
           }
         }
@@ -185,7 +185,7 @@ public class AlertGenerator {
 
     // Check if the latest saturation is below 92%
     if (latestRecord.measurementValue() < 92) {
-      return new Alert(String.valueOf(patient.getId()), "CRITICAL: LOW SATURATION",
+      return new Alert(patient.getId(), "CRITICAL: LOW SATURATION",
           latestRecord.timestamp());
     }
 
@@ -195,7 +195,7 @@ public class AlertGenerator {
       if ((latestRecord.timestamp() - prevRecord.timestamp()) <= (10 * 60 * 1000)) {
         double drop = latestRecord.measurementValue() - prevRecord.measurementValue();
         if (drop >= 5) {
-          return new Alert(String.valueOf(patient.getId()), "TREND: RAPID SATURATION DROP",
+          return new Alert(patient.getId(), "TREND: RAPID SATURATION DROP",
               latestRecord.timestamp());
         }
       } else {
@@ -249,7 +249,7 @@ public class AlertGenerator {
       }
 
       if (lowSpO2 && lowSystolicPressure) {
-        return new Alert(String.valueOf(patient.getId()), "CRITICAL: "
+        return new Alert(patient.getId(), "CRITICAL: "
             + "HYPOTENSIVE HYPOXEMIA", oxygenRecord.timestamp());
       }
 
@@ -286,7 +286,7 @@ public class AlertGenerator {
     double threshold = average + 2 * sd;
     for (PatientRecord record : ecgRecords) {
       if (Math.abs(record.measurementValue()) > threshold) {
-        return new Alert(String.valueOf(patient.getId()), "ECG PEAK ALERT",
+        return new Alert(patient.getId(), "ECG PEAK ALERT",
             record.timestamp());
       }
     }
