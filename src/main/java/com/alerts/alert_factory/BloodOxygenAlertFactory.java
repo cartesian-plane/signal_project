@@ -4,7 +4,7 @@ import com.alerts.Alert;
 
 public class BloodOxygenAlertFactory extends AlertFactory {
     @Override
-    public Alert createAlert(String patientId, String condition, long timestamp) {
+    public Alert createAlert(int patientId, String condition, long timestamp) {
         if (condition.equalsIgnoreCase("LOW_SATURATION")) {
             return new Alert(patientId, "CRITICAL: LOW SATURATION", timestamp);
         } else if (condition.equalsIgnoreCase("RAPID_SATURATION_DROP")) {
