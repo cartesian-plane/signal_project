@@ -30,7 +30,7 @@ class ReaderTest {
   @Test
   @DisplayName("Read from File and pass to DataStorage")
   void testReadDataFromFile() {
-    DataStorage dataStorage = new DataStorage();
+    DataStorage dataStorage = DataStorage.getInstance();
     Reader reader = new Reader();
 
     // resources directory for test files
@@ -124,7 +124,8 @@ class ReaderTest {
     void testWebSocketIntegration() {
       // had to move the WebSocketServer into its separate class, in order to load it
 
-      DataStorage dataStorage = new DataStorage();
+      DataStorage dataStorage = DataStorage.getInstance();
+      dataStorage.clearData();
       AlertGenerator alertGenerator = new AlertGenerator(dataStorage);
       Reader reader = new Reader();
       URI serverUri = null;

@@ -12,8 +12,8 @@ import com.alerts.AlertGenerator;
  */
 public class DataStorage {
 
-  private final Map<Integer, Patient> patientMap; // Stores patient objects indexed by their unique patient ID.
-
+  private Map<Integer, Patient> patientMap; // Stores patient objects indexed by their unique patient ID.
+  private static DataStorage instance;
 
   /**
    * The main method for the DataStorage class. Initializes the system, reads data into storage, and
@@ -24,7 +24,7 @@ public class DataStorage {
   public static void main(String[] args) {
     // DataReader is not defined in this scope, should be initialized appropriately.
     // DataReader reader = new SomeDataReaderImplementation("path/to/data");
-    DataStorage storage = new DataStorage();
+    DataStorage storage = DataStorage.getInstance();
 
     // Assuming the reader has been properly initialized and can read data into the
     // storage
@@ -51,8 +51,15 @@ public class DataStorage {
   /**
    * Constructs a new instance of DataStorage, initializing the underlying storage structure.
    */
-  public DataStorage() {
+  private DataStorage() {
     this.patientMap = new HashMap<>();
+  }
+
+  public static DataStorage getInstance() {
+    if (instance == null) {
+      instance = new DataStorage();
+    }
+    return instance;
   }
 
   /**
@@ -127,5 +134,7 @@ public class DataStorage {
     return new ArrayList<>(patientMap.values());
   }
 
-
+  public void clearData() {
+    patientMap = new HashMap<Integer, Patient>();
+  }
 }
