@@ -13,6 +13,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingQueue;
+import com.alerts.Alert;
 import com.alerts.AlertGenerator;
 import com.cardiogenerator.outputs.SimpleWebSocketServer;
 import org.java_websocket.WebSocket;
@@ -100,6 +101,7 @@ class ReaderTest {
   class IntegrationTest {
     private SimpleWebSocketServer server;
 
+    // simple methods to set up and shut down the WebSocketServer
     @BeforeEach
     void setUp() {
       server = new SimpleWebSocketServer(new InetSocketAddress(8080));
@@ -108,24 +110,19 @@ class ReaderTest {
 
     @AfterEach
     void tearDown() {
-//      if (server != null) {
-//        try {
-//          System.out.println("Stopping server...");
-//          server.stop();
-//          System.out.println("Server stopped successfully!");
-//        } catch (InterruptedException e) {
-//          System.out.println("Error when stopping server");
-//          throw new RuntimeException(e);
-//        }
-//      }
+      try {
+        System.out.println("Stopping server...");
+        server.stop();
+        System.out.println("Server stopped successfully!");
+      } catch (InterruptedException e) {
+        System.out.println("Error when stopping server");
+        throw new RuntimeException(e);
+      }
     }
 
     @Test
     void testWebSocketIntegration() {
       // had to move the WebSocketServer into its separate class, in order to load it
-
-      SimpleWebSocketServer server = new SimpleWebSocketServer(new InetSocketAddress(8080));
-      server.start();
 
       DataStorage dataStorage = new DataStorage();
       AlertGenerator alertGenerator = new AlertGenerator(dataStorage);
@@ -139,7 +136,10 @@ class ReaderTest {
 
       reader.readDataFromWebSocket(serverUri, dataStorage);
 
-      String message = "{\"patientId\":15,\"measurementValue\":181,\"recordType\":\"SystolicPressure\",\"timestamp\":1715519279864}";
+      long timestamp = System.currentTimeMillis();
+      String message1 = "{\"patientId\":15,\"measurementValue\":181,\"recordType\":\"SystolicPressure\",\"timestamp\":"+timestamp+"}";
+      String message2 = "{\"patientId\":15,\"measurementValue\":181,\"recordType\":\"SystolicPressure\",\"timestamp\":"+(timestamp+1)+"}";
+      String message3 = "{\"patientId\":15,\"measurementValue\":181,\"recordType\":\"SystolicPressure\",\"timestamp\":"+(timestamp+2)+"}";
 
       try {
         Thread.sleep(1000);
@@ -149,7 +149,9 @@ class ReaderTest {
 
       for (WebSocket conn : server.getConnections()) {
         System.out.println("sending messages");
-        conn.send(message);
+        conn.send(message1);
+        conn.send(message2);
+        conn.send(message3);
       }
 
       try {
@@ -158,21 +160,20 @@ class ReaderTest {
         throw new RuntimeException(e);
       }
 
-      try {
-        System.out.println("Stopping server...");
-        server.stop();
-        System.out.println("Server stopped successfully!");
-      } catch (InterruptedException e) {
-        System.out.println("Error when stopping server");
-        throw new RuntimeException(e);
-      }
 
-      PatientRecord expectedRecord = new PatientRecord(15, 181, "SystolicPressure", 1715519279864L);
-      PatientRecord actualRecord = dataStorage.getRecords(15, 1, 1715519279865L).get(0);
+
+      // timestamp to use for testing purposes
+
+      PatientRecord expectedRecord = new PatientRecord(15, 181, "SystolicPressure", timestamp);
+      PatientRecord actualRecord = dataStorage.getRecords(15).get(0);
+
       assertEquals(expectedRecord, actualRecord);
 
       Patient testPatient = new Patient(15);
-      alertGenerator.evaluateData(testPatient);
+      var expectedAlert = new Alert("15",
+          "CRITICAL: HIGH SYSTOLIC PRESSURE" ,timestamp);
+      var actualAlert = alertGenerator.bloodPressureAlert(testPatient);
+      assertEquals(expectedAlert, actualAlert);
     }
 
   }
