@@ -1,7 +1,7 @@
 package com.alerts;
 
 // Represents an alert
-public class Alert {
+public class Alert implements IAlert {
 
   private int patientId;
   private String condition;
