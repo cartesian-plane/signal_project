@@ -65,7 +65,7 @@ public class HealthDataSimulator {
         Collections.shuffle(patientIds);
 
         scheduleTasksForPatients(patientIds);
-        var dataStorage = new DataStorage();
+        var dataStorage = DataStorage.getInstance();
         var reader = new Reader();
       try {
         reader.readDataFromWebSocket(new URI("ws://localhost:" + PORT), dataStorage);

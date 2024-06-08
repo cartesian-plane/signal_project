@@ -1,5 +1,10 @@
 package com.alerts;
 
+import com.alerts.strategies.AlertStrategy;
+import com.alerts.strategies.BloodPressureStrategy;
+import com.alerts.strategies.HeartRateStrategy;
+import com.alerts.strategies.HypotensiveHypoxemiaStrategy;
+import com.alerts.strategies.OxygenSaturationStrategy;
 import com.data_management.DataStorage;
 import com.data_management.Patient;
 import com.data_management.PatientRecord;
@@ -80,77 +85,8 @@ public class AlertGenerator {
    * @return {@code Alert} if necessary, {@code null} otherwise
    */
   public Alert bloodPressureAlert(Patient patient) {
-    List<PatientRecord> records = dataStorage.getRecords(patient.getId(),
-        System.currentTimeMillis() - (10 * 60 * 1000), Long.MAX_VALUE);
-
-    for (int i = 2; i < records.size(); i++) {
-      PatientRecord record1 = records.get(i - 2);
-      PatientRecord record2 = records.get(i - 1);
-      PatientRecord record3 = records.get(i);
-
-      // Critical alert: diastolic & systolic
-      if (record1.recordType().equalsIgnoreCase("DiastolicPressure")) {
-        if (record1.measurementValue() < 60) {
-          return new Alert(patient.getId(),
-              "CRITICAL: LOW DIASTOLIC PRESSURE", record1.timestamp());
-        } else if (record1.measurementValue() > 120) {
-          return new Alert(patient.getId(),
-              "CRITICAL: HIGH DIASTOLIC PRESSURE", record1.timestamp());
-        }
-      } else if (record1.recordType().equalsIgnoreCase("SystolicPressure")) {
-        if (record1.measurementValue() < 90) {
-          return new Alert(patient.getId(),
-              "CRITICAL: LOW SYSTOLIC PRESSURE", record1.timestamp());
-        } else if (record1.measurementValue() > 180) {
-          return new Alert(patient.getId(),
-              "CRITICAL: HIGH SYSTOLIC PRESSURE", record1.timestamp());
-        }
-      }
-
-      // Trend Alert: Diastolic Pressure
-      if (record1.recordType().equals("DiastolicPressure") &&
-          record2.recordType().equals("DiastolicPressure") &&
-          record3.recordType().equals("DiastolicPressure")) {
-        double change1 = record2.measurementValue() - record1.measurementValue();
-        double change2 = record3.measurementValue() - record2.measurementValue();
-
-        // use the Signum function to check if the change is strictly monotonous
-        if (Math.abs(change1) > 10 &&
-            Math.abs(change2) > 10 &&
-            Math.signum(change1) == Math.signum(change2)) {
-          if (Math.signum(change1) > 0) {
-            return new Alert(patient.getId(),
-                "TREND: INCREASING DIASTOLIC PRESSURE", record1.timestamp());
-          } else {
-            return new Alert(patient.getId(),
-                "TREND: DECREASING DIASTOLIC PRESSURE", record1.timestamp());
-          }
-        }
-      }
-
-      // Trend Alert: Systolic Pressure
-      if (record1.recordType().equals("SystolicPressure") &&
-          record2.recordType().equals("SystolicPressure") &&
-          record3.recordType().equals("SystolicPressure")) {
-        double change1 = record2.measurementValue() - record1.measurementValue();
-        double change2 = record3.measurementValue() - record2.measurementValue();
-
-        // use the Signum function to check if the change is strictly monotonous
-        if (Math.abs(change1) > 10 &&
-            Math.abs(change2) > 10 &&
-            Math.signum(change1) == Math.signum(change2)) {
-          if (Math.signum(change1) > 0) {
-            return new Alert(patient.getId(),
-                "TREND: INCREASING SYSTOLIC PRESSURE", record1.timestamp());
-          } else {
-            return new Alert(patient.getId(),
-                "TREND: DECREASING SYSTOLIC PRESSURE", record1.timestamp());
-          }
-        }
-      }
-    }
-
-    return null;
+    AlertStrategy strategy = new BloodPressureStrategy();
+    return strategy.checkAlert(patient);
   }
 
   /**
@@ -167,45 +103,8 @@ public class AlertGenerator {
    * are triggered within the specified time range
    */
   public Alert bloodSaturationAlert(Patient patient) {
-    // Get all blood oxygen saturation records for the patient
-    List<PatientRecord> saturationRecords = dataStorage.getRecords(patient.getId(),
-            System.currentTimeMillis()
-            - (10 * 60 * 1000), System.currentTimeMillis() + 100)
-        .stream()
-        .filter(record -> record.recordType().equalsIgnoreCase("Saturation"))
-        .toList();
-
-    if (saturationRecords.isEmpty()) {
-      // No records found within the last 10 minutes
-      return null;
-    }
-
-    // Get the latest blood saturation record
-    PatientRecord latestRecord = saturationRecords.get(0);
-
-    // Check if the latest saturation is below 92%
-    if (latestRecord.measurementValue() < 92) {
-      return new Alert(patient.getId(), "CRITICAL: LOW SATURATION",
-          latestRecord.timestamp());
-    }
-
-    // Check for rapid drop within a 10-minute interval
-    for (int i = 1; i < saturationRecords.size(); i++) {
-      PatientRecord prevRecord = saturationRecords.get(i);
-      if ((latestRecord.timestamp() - prevRecord.timestamp()) <= (10 * 60 * 1000)) {
-        double drop = latestRecord.measurementValue() - prevRecord.measurementValue();
-        if (drop >= 5) {
-          return new Alert(patient.getId(), "TREND: RAPID SATURATION DROP",
-              latestRecord.timestamp());
-        }
-      } else {
-        // No more records within the 10-minute interval
-        break;
-      }
-    }
-
-    // No alerts triggered
-    return null;
+    AlertStrategy strategy = new OxygenSaturationStrategy();
+    return strategy.checkAlert(patient);
   }
 
   /**
@@ -218,44 +117,8 @@ public class AlertGenerator {
    * @return {@code Alert} if necessary, {@code null} otherwise
    */
   public Alert hypotensiveHypoxemiaAlert(Patient patient) {
-    List<PatientRecord> systolicPressureRecords = dataStorage.getRecords(patient.getId(),
-            System.currentTimeMillis() - (10 * 60 * 1000),
-            System.currentTimeMillis() + 1000)
-        .stream()
-        .filter(record -> record.recordType().equalsIgnoreCase("SystolicPressure"))
-        .toList();
-
-    List<PatientRecord> saturationRecords = dataStorage.getRecords(patient.getId(),
-            System.currentTimeMillis() - (10 * 60 * 1000),
-            System.currentTimeMillis() + 1000)
-        .stream()
-        .filter(record -> record.recordType().equals("Saturation"))
-        .toList();
-
-    boolean lowSystolicPressure = false;
-    boolean lowSpO2 = false;
-
-    System.out.println(systolicPressureRecords.size());
-    for (PatientRecord pressureRecord : systolicPressureRecords) {
-      if (pressureRecord.measurementValue() < MIN_SYSTOLIC_PRESSURE) {
-        lowSystolicPressure = true;
-      }
-
-    }
-
-    for (PatientRecord oxygenRecord : saturationRecords) {
-      if (oxygenRecord.measurementValue() < MIN_SPO2) {
-        lowSpO2 = true;
-      }
-
-      if (lowSpO2 && lowSystolicPressure) {
-        return new Alert(patient.getId(), "CRITICAL: "
-            + "HYPOTENSIVE HYPOXEMIA", oxygenRecord.timestamp());
-      }
-
-    }
-
-    return null;
+    AlertStrategy strategy = new HypotensiveHypoxemiaStrategy();
+    return strategy.checkAlert(patient);
   }
 
   /**
@@ -263,35 +126,8 @@ public class AlertGenerator {
    * @return
    */
   public Alert ecgAlert(Patient patient) {
-    List<PatientRecord> ecgRecords = patient.getRecords(System.currentTimeMillis()
-            - (10 * 60 * 1000), System.currentTimeMillis())
-        .stream()
-        .filter(record -> record.recordType().equals("ECG"))
-        .toList();
-
-
-    double average = ecgRecords.stream()
-        .mapToDouble(PatientRecord::measurementValue)
-        .average()
-        .orElse(0);
-
-    double sumOfSquaredDifferences = ecgRecords.stream()
-        .mapToDouble(record -> Math.pow(record.measurementValue() - average, 2))
-        .sum();
-
-    double variance = sumOfSquaredDifferences / ecgRecords.size();
-
-    double sd = Math.sqrt(variance);
-
-    double threshold = average + 2 * sd;
-    for (PatientRecord record : ecgRecords) {
-      if (Math.abs(record.measurementValue()) > threshold) {
-        return new Alert(patient.getId(), "ECG PEAK ALERT",
-            record.timestamp());
-      }
-    }
-
-    return null;
+    AlertStrategy strategy = new HeartRateStrategy();
+    return strategy.checkAlert(patient);
   }
 
   /**

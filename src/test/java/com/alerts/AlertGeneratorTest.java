@@ -31,7 +31,9 @@ class AlertGeneratorTest {
 
   @BeforeEach
   void setUp() {
-    dataStorage = new DataStorage();
+    dataStorage = DataStorage.getInstance();
+    // this has to be done because of the Singleton pattern
+    dataStorage.clearData();
     reader = new Reader();
     alertGenerator = new AlertGenerator(dataStorage);
   }

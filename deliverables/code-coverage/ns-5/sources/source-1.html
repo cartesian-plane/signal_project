@@ -188,7 +188,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;    public static void main(String[] args) {
 &nbsp;        // DataReader is not defined in this scope, should be initialized appropriately.
 &nbsp;        // DataReader reader = new SomeDataReaderImplementation(&quot;path/to/data&quot;);
-<b class="nc">&nbsp;        DataStorage storage = new DataStorage();</b>
+<b class="nc">&nbsp;        DataStorage storage = DataStorage.getInstance();</b>
 &nbsp;
 &nbsp;        // Assuming the reader has been properly initialized and can read data into the
 &nbsp;        // storage
