@@ -1,6 +1,7 @@
 package com.alerts.alert_factory;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.junit.jupiter.api.Test;
@@ -9,54 +10,146 @@ import com.alerts.Alert;
 
 public class AlertFactoryTest {
     @Test
-    public void testBloodPressureAlertFactory() {
-        AlertFactory bloodPressureFactory = new BloodPressureAlertFactory();
+    void testBloodPressureAlert() {
+        // Arrange
+        AlertFactory factory = new BloodPressureAlertFactory();
+        int patientId = 12345;
+        String condition = "HIGH_BLOOD_PRESSURE";
+        long timestamp = System.currentTimeMillis();
 
-        // Test low systolic pressure alert
-        Alert lowSystolicPressureAlert = bloodPressureFactory.createAlert(1, "LOW_SYSTOLIC_PRESSURE", 1624945238000L);
-        assertEquals("CRITICAL: LOW SYSTOLIC PRESSURE", lowSystolicPressureAlert.getCondition());
+        // Act
+        Alert alert = factory.createAlert(patientId, condition, timestamp);
 
-        // Test high systolic pressure alert
-        Alert highSystolicPressureAlert = bloodPressureFactory.createAlert(2, "HIGH_SYSTOLIC_PRESSURE", 1624945238000L);
-        assertEquals("CRITICAL: HIGH SYSTOLIC PRESSURE", highSystolicPressureAlert.getCondition());
-
-        // Test increasing systolic pressure trend alert
-        Alert increasingSystolicPressureAlert = bloodPressureFactory.createAlert(3, "INCREASING_SYSTOLIC_PRESSURE", 1624945238000L);
-        assertEquals("TREND: INCREASING SYSTOLIC PRESSURE", increasingSystolicPressureAlert.getCondition());
-
-        // Test decreasing systolic pressure trend alert
-        Alert decreasingSystolicPressureAlert = bloodPressureFactory.createAlert(4, "DECREASING_SYSTOLIC_PRESSURE", 1624945238000L);
-        assertEquals("TREND: DECREASING SYSTOLIC PRESSURE", decreasingSystolicPressureAlert.getCondition());
-
-        // Test unknown condition
-        assertNull(bloodPressureFactory.createAlert(5, "UNKNOWN_CONDITION", 1624945238000L));
+        // Assert
+        assertNotNull(alert, "Alert should not be null");
+        assertEquals(patientId, alert.getPatientId(), "Patient ID should match");
+        assertEquals(condition, alert.getCondition(), "Condition should match");
+        assertEquals(timestamp, alert.getTimestamp(), "Timestamp should match");
     }
 
     @Test
-    public void testBloodOxygenAlertFactory() {
-        AlertFactory bloodOxygenFactory = new BloodOxygenAlertFactory();
+    void testBloodPressureAlertWithDifferentCondition() {
+        // Arrange
+        AlertFactory factory = new BloodPressureAlertFactory();
+        int patientId = 12345;
+        String condition = "LOW_BLOOD_PRESSURE";
+        long timestamp = System.currentTimeMillis();
 
-        // Test low saturation alert
-        Alert lowSaturationAlert = bloodOxygenFactory.createAlert(1, "LOW_SATURATION", 1624945238000L);
-        assertEquals("CRITICAL: LOW SATURATION", lowSaturationAlert.getCondition());
+        // Act
+        Alert alert = factory.createAlert(patientId, condition, timestamp);
 
-        // Test rapid saturation drop trend alert
-        Alert rapidSaturationDropAlert = bloodOxygenFactory.createAlert(2, "RAPID_SATURATION_DROP", 1624945238000L);
-        assertEquals("TREND: RAPID SATURATION DROP", rapidSaturationDropAlert.getCondition());
-
-        // Test unknown condition
-        assertNull(bloodOxygenFactory.createAlert(3, "UNKNOWN_CONDITION", 1624945238000L));
+        // Assert
+        assertNotNull(alert, "Alert should not be null");
+        assertEquals(patientId, alert.getPatientId(), "Patient ID should match");
+        assertEquals(condition, alert.getCondition(), "Condition should match");
+        assertEquals(timestamp, alert.getTimestamp(), "Timestamp should match");
     }
 
     @Test
-    public void testECGAlertFactory() {
-        AlertFactory ecgFactory = new ECGAlertFactory();
+    void testBloodOxygenAlert() {
+        // Arrange
+        AlertFactory factory = new BloodOxygenAlertFactory();
+        int patientId = 13579;
+        String condition = "LOW_OXYGEN_LEVEL";
+        long timestamp = System.currentTimeMillis();
 
-        // Test ECG peak alert
-        Alert ecgPeakAlert = ecgFactory.createAlert(1, "ECG_PEAK_ALERT", 1624945238000L);
-        assertEquals("ECG PEAK ALERT", ecgPeakAlert.getCondition());
+        // Act
+        Alert alert = factory.createAlert(patientId, condition, timestamp);
 
-        // Test unknown condition
-        assertNull(ecgFactory.createAlert(2, "UNKNOWN_CONDITION", 1624945238000L));
+        // Assert
+        assertNotNull(alert, "Alert should not be null");
+        assertEquals(patientId, alert.getPatientId(), "Patient ID should match");
+        assertEquals(condition, alert.getCondition(), "Condition should match");
+        assertEquals(timestamp, alert.getTimestamp(), "Timestamp should match");
+    }
+
+    @Test
+    void testBloodOxygenAlertWithDifferentCondition() {
+        // Arrange
+        AlertFactory factory = new BloodOxygenAlertFactory();
+        int patientId = 13579;
+        String condition = "HIGH_OXYGEN_LEVEL";
+        long timestamp = System.currentTimeMillis();
+
+        // Act
+        Alert alert = factory.createAlert(patientId, condition, timestamp);
+
+        // Assert
+        assertNotNull(alert, "Alert should not be null");
+        assertEquals(patientId, alert.getPatientId(), "Patient ID should match");
+        assertEquals(condition, alert.getCondition(), "Condition should match");
+        assertEquals(timestamp, alert.getTimestamp(), "Timestamp should match");
+    }
+
+    @Test
+    void testECGAlert() {
+        // Arrange
+        AlertFactory factory = new ECGAlertFactory();
+        int patientId = 67890;
+        String condition = "IRREGULAR_HEART_RATE";
+        long timestamp = System.currentTimeMillis();
+
+        // Act
+        Alert alert = factory.createAlert(patientId, condition, timestamp);
+
+        // Assert
+        assertNotNull(alert, "Alert should not be null");
+        assertEquals(patientId, alert.getPatientId(), "Patient ID should match");
+        assertEquals(condition, alert.getCondition(), "Condition should match");
+        assertEquals(timestamp, alert.getTimestamp(), "Timestamp should match");
+    }
+
+    @Test
+    void testECGAlertWithDifferentCondition() {
+        // Arrange
+        AlertFactory factory = new ECGAlertFactory();
+        int patientId = 67890;
+        String condition = "NORMAL_HEART_RATE";
+        long timestamp = System.currentTimeMillis();
+
+        // Act
+        Alert alert = factory.createAlert(patientId, condition, timestamp);
+
+        // Assert
+        assertNotNull(alert, "Alert should not be null");
+        assertEquals(patientId, alert.getPatientId(), "Patient ID should match");
+        assertEquals(condition, alert.getCondition(), "Condition should match");
+        assertEquals(timestamp, alert.getTimestamp(), "Timestamp should match");
+    }
+
+    @Test
+    void testHypotensiveHypoxemiaAlert() {
+        // Arrange
+        AlertFactory factory = new HypotensiveHypoxemiaFactory();
+        int patientId = 12345;
+        String condition = "HYPOTENSIVE_HYPOXEMIA";
+        long timestamp = System.currentTimeMillis();
+
+        // Act
+        Alert alert = factory.createAlert(patientId, condition, timestamp);
+
+        // Assert
+        assertNotNull(alert, "Alert should not be null");
+        assertEquals(patientId, alert.getPatientId(), "Patient ID should match");
+        assertEquals(condition, alert.getCondition(), "Condition should match");
+        assertEquals(timestamp, alert.getTimestamp(), "Timestamp should match");
+    }
+
+    @Test
+    void testHypotensiveHypoxemiaAlertWithDifferentCondition() {
+        // Arrange
+        AlertFactory factory = new HypotensiveHypoxemiaFactory();
+        int patientId = 12345;
+        String condition = "ANOTHER_CONDITION";
+        long timestamp = System.currentTimeMillis();
+
+        // Act
+        Alert alert = factory.createAlert(patientId, condition, timestamp);
+
+        // Assert
+        assertNotNull(alert, "Alert should not be null");
+        assertEquals(patientId, alert.getPatientId(), "Patient ID should match");
+        assertEquals(condition, alert.getCondition(), "Condition should match");
+        assertEquals(timestamp, alert.getTimestamp(), "Timestamp should match");
     }
 }

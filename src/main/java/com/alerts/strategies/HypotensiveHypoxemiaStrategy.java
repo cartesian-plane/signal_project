@@ -2,13 +2,14 @@ package com.alerts.strategies;
 
 import com.alerts.Alert;
 import com.alerts.ThresholdValue;
+import com.alerts.alert_factory.HypotensiveHypoxemiaFactory;
 import com.data_management.DataStorage;
 import com.data_management.Patient;
 import com.data_management.PatientRecord;
 import java.util.List;
 
 public class HypotensiveHypoxemiaStrategy implements AlertStrategy {
-
+  private static final HypotensiveHypoxemiaFactory FACTORY = new HypotensiveHypoxemiaFactory();
   @Override
   public Alert checkAlert(Patient patient) {
     var dataStorage = DataStorage.getInstance();
@@ -44,7 +45,7 @@ public class HypotensiveHypoxemiaStrategy implements AlertStrategy {
       }
 
       if (lowSpO2 && lowSystolicPressure) {
-        return new Alert(patient.getId(), "CRITICAL: "
+        return FACTORY.createAlert(patient.getId(), "CRITICAL: "
             + "HYPOTENSIVE HYPOXEMIA", oxygenRecord.timestamp());
       }
 
