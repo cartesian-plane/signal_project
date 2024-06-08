@@ -10,6 +10,7 @@ public class RepeatedAlertAlertDecorator extends BaseAlertDecorator {
   }
 
   public void repeatAlert() {
+    repeatedCount++;
     // magic logic to repeat an alert somehow???
   }
 
