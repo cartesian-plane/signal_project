@@ -10,7 +10,7 @@ import com.data_management.PatientRecord;
 import java.util.List;
 
 public class BloodPressureStrategy implements AlertStrategy {
-  private static final AlertFactory factory = new BloodPressureAlertFactory();
+  private static final AlertFactory FACTORY = new BloodPressureAlertFactory();
   @Override
   public Alert checkAlert(Patient patient) {
 
@@ -25,19 +25,19 @@ public class BloodPressureStrategy implements AlertStrategy {
       // Critical alert: diastolic & systolic
       if (record1.recordType().equalsIgnoreCase("DiastolicPressure")) {
         if (record1.measurementValue() < 60) {
-          return factory.createAlert(patient.getId(),
+          return FACTORY.createAlert(patient.getId(),
               "CRITICAL: LOW DIASTOLIC PRESSURE", record1.timestamp());
         } else if (record1.measurementValue() > ThresholdValue.MAX_DIASTOLIC_PRESSURE.getValue()) {
-          return factory.createAlert(patient.getId(),
+          return FACTORY.createAlert(patient.getId(),
               "CRITICAL: HIGH DIASTOLIC PRESSURE", record1.timestamp());
         }
       } else if (record1.recordType().equalsIgnoreCase("SystolicPressure")) {
         if (record1.measurementValue() < ThresholdValue.MIN_SYSTOLIC_PRESSURE.getValue()) {
 
-          return factory.createAlert(patient.getId(),
+          return FACTORY.createAlert(patient.getId(),
               "CRITICAL: LOW SYSTOLIC PRESSURE", record1.timestamp());
         } else if (record1.measurementValue() > ThresholdValue.MAX_SYSTOLIC_PRESSURE.getValue()) {
-          return factory.createAlert(patient.getId(),
+          return FACTORY.createAlert(patient.getId(),
               "CRITICAL: HIGH SYSTOLIC PRESSURE", record1.timestamp());
         }
       }
@@ -54,10 +54,10 @@ public class BloodPressureStrategy implements AlertStrategy {
             Math.abs(change2) > ThresholdValue.INCREASING_TREND.getValue() &&
             Math.signum(change1) == Math.signum(change2)) {
           if (Math.signum(change1) > 0) {
-            return factory.createAlert(patient.getId(),
+            return FACTORY.createAlert(patient.getId(),
                 "TREND: INCREASING DIASTOLIC PRESSURE", record1.timestamp());
           } else {
-            return factory.createAlert(patient.getId(),
+            return FACTORY.createAlert(patient.getId(),
                 "TREND: DECREASING DIASTOLIC PRESSURE", record1.timestamp());
           }
         }
@@ -75,10 +75,10 @@ public class BloodPressureStrategy implements AlertStrategy {
             Math.abs(change2) > ThresholdValue.INCREASING_TREND.getValue() &&
             Math.signum(change1) == Math.signum(change2)) {
           if (Math.signum(change1) > 0) {
-            return factory.createAlert(patient.getId(),
+            return FACTORY.createAlert(patient.getId(),
                 "TREND: INCREASING SYSTOLIC PRESSURE", record1.timestamp());
           } else {
-            return factory.createAlert(patient.getId(),
+            return FACTORY.createAlert(patient.getId(),
                 "TREND: DECREASING SYSTOLIC PRESSURE", record1.timestamp());
           }
         }

@@ -2,13 +2,16 @@ package com.alerts.strategies;
 
 import com.alerts.Alert;
 import com.alerts.ThresholdValue;
+import com.alerts.alert_factory.AlertFactory;
+import com.alerts.alert_factory.BloodOxygenAlertFactory;
+import com.alerts.alert_factory.BloodPressureAlertFactory;
 import com.data_management.DataStorage;
 import com.data_management.Patient;
 import com.data_management.PatientRecord;
 import java.util.List;
 
 public class OxygenSaturationStrategy implements AlertStrategy {
-
+  private static final AlertFactory FACTORY = new BloodOxygenAlertFactory();
   @Override
   public Alert checkAlert(Patient patient) {
     // Get all blood oxygen saturation records for the patient
@@ -30,7 +33,7 @@ public class OxygenSaturationStrategy implements AlertStrategy {
 
     // Check if the latest saturation is below 92%
     if (latestRecord.measurementValue() < ThresholdValue.MIN_SATURATION.getValue()) {
-      return new Alert(patient.getId(), "CRITICAL: LOW SATURATION",
+      return FACTORY.createAlert(patient.getId(), "CRITICAL: LOW SATURATION",
           latestRecord.timestamp());
     }
 
@@ -40,7 +43,7 @@ public class OxygenSaturationStrategy implements AlertStrategy {
       if ((latestRecord.timestamp() - prevRecord.timestamp()) <= (10 * 60 * 1000)) {
         double drop = latestRecord.measurementValue() - prevRecord.measurementValue();
         if (drop >= ThresholdValue.RAPID_DROP.getValue()) {
-          return new Alert(patient.getId(), "TREND: RAPID SATURATION DROP",
+          return FACTORY.createAlert(patient.getId(), "TREND: RAPID SATURATION DROP",
               latestRecord.timestamp());
         }
       } else {

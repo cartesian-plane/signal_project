@@ -1,13 +1,16 @@
 package com.alerts.strategies;
 
 import com.alerts.Alert;
+import com.alerts.alert_factory.AlertFactory;
+import com.alerts.alert_factory.BloodPressureAlertFactory;
+import com.alerts.alert_factory.ECGAlertFactory;
 import com.data_management.DataStorage;
 import com.data_management.Patient;
 import com.data_management.PatientRecord;
 import java.util.List;
 
 public class HeartRateStrategy implements AlertStrategy {
-
+  private static final AlertFactory FACTORY = new ECGAlertFactory();
   @Override
   public Alert checkAlert(Patient patient) {
 
@@ -34,7 +37,7 @@ public class HeartRateStrategy implements AlertStrategy {
     double threshold = average + 2 * sd;
     for (PatientRecord record : ecgRecords) {
       if (Math.abs(record.measurementValue()) > threshold) {
-        return new Alert(patient.getId(), "ECG PEAK ALERT",
+        return FACTORY.createAlert(patient.getId(), "ECG PEAK ALERT",
             record.timestamp());
       }
     }
