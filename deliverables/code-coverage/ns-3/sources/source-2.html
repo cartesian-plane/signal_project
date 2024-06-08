@@ -5,7 +5,7 @@
 <html id="htmlId">
 <head>
   <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
-  <title>Coverage Report > BloodLevelsDataGenerator</title>
+  <title>Coverage Report > BaseAlertDecorator</title>
   <style type="text/css">
     @import "../../css/coverage.css";
     @import "../../css/idea.min.css";
@@ -19,10 +19,10 @@
 <div class="breadCrumbs">
 Current scope:     <a href="../../index.html">all classes</a>
     <span class="separator">|</span>
-    <a href="../index.html">com.cardiogenerator.generators</a>
+    <a href="../index.html">com.alerts.decorator</a>
 </div>
 
-<h1>Coverage Summary for Class: BloodLevelsDataGenerator (com.cardiogenerator.generators)</h1>
+<h1>Coverage Summary for Class: BaseAlertDecorator (com.alerts.decorator)</h1>
 
 <table class="coverageStats">
 <tr>
@@ -37,15 +37,11 @@ Current scope:     <a href="../../index.html">all classes</a>
 </th>
 <th class="coverageStat 
 ">
-  Branch, %
-</th>
-<th class="coverageStat 
-">
   Line, %
 </th>
 </tr>
 <tr>
-  <td class="name">BloodLevelsDataGenerator</td>
+  <td class="name">BaseAlertDecorator</td>
 <td class="coverageStat">
   <span class="percent">
     0%
@@ -59,7 +55,7 @@ Current scope:     <a href="../../index.html">all classes</a>
     0%
   </span>
   <span class="absValue">
-    (0/3)
+    (0/1)
   </span>
 </td>
 <td class="coverageStat">
@@ -68,14 +64,6 @@ Current scope:     <a href="../../index.html">all classes</a>
   </span>
   <span class="absValue">
     (0/2)
-  </span>
-</td>
-<td class="coverageStat">
-  <span class="percent">
-    0%
-  </span>
-  <span class="absValue">
-    (0/24)
   </span>
 </td>
 </tr>
@@ -87,56 +75,15 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 
 <pre>
-<code class="sourceCode" id="sourceCode">&nbsp;package com.cardiogenerator.generators;
+<code class="sourceCode" id="sourceCode">&nbsp;package com.alerts.decorator;
 &nbsp;
-&nbsp;import java.util.Random;
+&nbsp;import com.alerts.IAlert;
 &nbsp;
-&nbsp;import com.cardiogenerator.outputs.OutputStrategy;
+&nbsp;public class BaseAlertDecorator implements IAlert {
+&nbsp;  private IAlert wrapee;
 &nbsp;
-&nbsp;public class BloodLevelsDataGenerator implements PatientDataGenerator {
-&nbsp;
-<b class="nc">&nbsp;  private static final Random random = new Random();</b>
-&nbsp;  private final double[] baselineCholesterol;
-&nbsp;  private final double[] baselineWhiteCells;
-&nbsp;  private final double[] baselineRedCells;
-&nbsp;
-<b class="nc">&nbsp;  public BloodLevelsDataGenerator(int patientCount) {</b>
-&nbsp;    // Initialize arrays to store baseline values for each patient
-<b class="nc">&nbsp;    baselineCholesterol = new double[patientCount + 1];</b>
-<b class="nc">&nbsp;    baselineWhiteCells = new double[patientCount + 1];</b>
-<b class="nc">&nbsp;    baselineRedCells = new double[patientCount + 1];</b>
-&nbsp;
-&nbsp;    // Generate baseline values for each patient
-<b class="nc">&nbsp;    for (int i = 1; i &lt;= patientCount; i++) {</b>
-<b class="nc">&nbsp;      baselineCholesterol[i] = 150 + random.nextDouble() * 50; // Initial random baseline</b>
-<b class="nc">&nbsp;      baselineWhiteCells[i] = 4 + random.nextDouble() * 6; // Initial random baseline</b>
-<b class="nc">&nbsp;      baselineRedCells[i] = 4.5 + random.nextDouble() * 1.5; // Initial random baseline</b>
-&nbsp;    }
-&nbsp;  }
-&nbsp;
-&nbsp;  @Override
-&nbsp;  public void generate(int patientId, OutputStrategy outputStrategy) {
-&nbsp;    try {
-&nbsp;      // Generate values around the baseline for realism
-<b class="nc">&nbsp;      double cholesterol =</b>
-<b class="nc">&nbsp;          baselineCholesterol[patientId] + (random.nextDouble() - 0.5) * 10; // Small variation</b>
-<b class="nc">&nbsp;      double whiteCells =</b>
-<b class="nc">&nbsp;          baselineWhiteCells[patientId] + (random.nextDouble() - 0.5) * 1; // Small variation</b>
-<b class="nc">&nbsp;      double redCells =</b>
-<b class="nc">&nbsp;          baselineRedCells[patientId] + (random.nextDouble() - 0.5) * 0.2; // Small variation</b>
-&nbsp;
-&nbsp;      // Output the generated values
-<b class="nc">&nbsp;      outputStrategy.output(patientId, System.currentTimeMillis(), &quot;Cholesterol&quot;,</b>
-<b class="nc">&nbsp;          Double.toString(cholesterol));</b>
-<b class="nc">&nbsp;      outputStrategy.output(patientId, System.currentTimeMillis(), &quot;WhiteBloodCells&quot;,</b>
-<b class="nc">&nbsp;          Double.toString(whiteCells));</b>
-<b class="nc">&nbsp;      outputStrategy.output(patientId, System.currentTimeMillis(), &quot;RedBloodCells&quot;,</b>
-<b class="nc">&nbsp;          Double.toString(redCells));</b>
-<b class="nc">&nbsp;    } catch (Exception e) {</b>
-<b class="nc">&nbsp;      System.err.println(</b>
-&nbsp;          &quot;An error occurred while generating blood levels data for patient &quot; + patientId);
-<b class="nc">&nbsp;      e.printStackTrace(); // This will print the stack trace to help identify where the error occurred.</b>
-&nbsp;    }
+<b class="nc">&nbsp;  public BaseAlertDecorator(IAlert alert) {</b>
+<b class="nc">&nbsp;    this.wrapee = alert;</b>
 &nbsp;  }
 &nbsp;}
 </code>
@@ -162,7 +109,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2024-05-24 18:07</div>
+    <div style="float:right;">generated on 2024-06-08 22:12</div>
 </div>
 </body>
 </html>

@@ -5,7 +5,7 @@
 <html id="htmlId">
 <head>
   <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
-  <title>Coverage Report > BloodPressureDataGenerator</title>
+  <title>Coverage Report > PriorityAlertDecorator</title>
   <style type="text/css">
     @import "../../css/coverage.css";
     @import "../../css/idea.min.css";
@@ -19,10 +19,10 @@
 <div class="breadCrumbs">
 Current scope:     <a href="../../index.html">all classes</a>
     <span class="separator">|</span>
-    <a href="../index.html">com.cardiogenerator.generators</a>
+    <a href="../index.html">com.alerts.decorator</a>
 </div>
 
-<h1>Coverage Summary for Class: BloodPressureDataGenerator (com.cardiogenerator.generators)</h1>
+<h1>Coverage Summary for Class: PriorityAlertDecorator (com.alerts.decorator)</h1>
 
 <table class="coverageStats">
 <tr>
@@ -37,29 +37,17 @@ Current scope:     <a href="../../index.html">all classes</a>
 </th>
 <th class="coverageStat 
 ">
-  Branch, %
-</th>
-<th class="coverageStat 
-">
   Line, %
 </th>
 </tr>
 <tr>
-  <td class="name">BloodPressureDataGenerator</td>
+  <td class="name">PriorityAlertDecorator</td>
 <td class="coverageStat">
   <span class="percent">
     0%
   </span>
   <span class="absValue">
     (0/1)
-  </span>
-</td>
-<td class="coverageStat">
-  <span class="percent">
-    0%
-  </span>
-  <span class="absValue">
-    (0/3)
   </span>
 </td>
 <td class="coverageStat">
@@ -75,7 +63,7 @@ Current scope:     <a href="../../index.html">all classes</a>
     0%
   </span>
   <span class="absValue">
-    (0/22)
+    (0/2)
   </span>
 </td>
 </tr>
@@ -87,52 +75,18 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 
 <pre>
-<code class="sourceCode" id="sourceCode">&nbsp;package com.cardiogenerator.generators;
+<code class="sourceCode" id="sourceCode">&nbsp;package com.alerts.decorator;
 &nbsp;
-&nbsp;import java.util.Random;
+&nbsp;import com.alerts.IAlert;
 &nbsp;
-&nbsp;import com.cardiogenerator.outputs.OutputStrategy;
-&nbsp;
-&nbsp;public class BloodPressureDataGenerator implements PatientDataGenerator {
-&nbsp;
-<b class="nc">&nbsp;  private static final Random random = new Random();</b>
-&nbsp;
-&nbsp;  private int[] lastSystolicValues;
-&nbsp;  private int[] lastDiastolicValues;
-&nbsp;
-<b class="nc">&nbsp;  public BloodPressureDataGenerator(int patientCount) {</b>
-<b class="nc">&nbsp;    lastSystolicValues = new int[patientCount + 1];</b>
-<b class="nc">&nbsp;    lastDiastolicValues = new int[patientCount + 1];</b>
-&nbsp;
-&nbsp;    // Initialize with baseline values for each patient
-<b class="nc">&nbsp;    for (int i = 1; i &lt;= patientCount; i++) {</b>
-<b class="nc">&nbsp;      lastSystolicValues[i] = 110 + random.nextInt(20); // Random baseline between 110 and 130</b>
-<b class="nc">&nbsp;      lastDiastolicValues[i] = 70 + random.nextInt(15); // Random baseline between 70 and 85</b>
-&nbsp;    }
+&nbsp;public class PriorityAlertDecorator extends BaseAlertDecorator{
+&nbsp;  private AlertSeverity severity;
+&nbsp;  public PriorityAlertDecorator(IAlert alert) {
+<b class="nc">&nbsp;    super(alert);</b>
 &nbsp;  }
 &nbsp;
-&nbsp;  @Override
-&nbsp;  public void generate(int patientId, OutputStrategy outputStrategy) {
-&nbsp;    try {
-<b class="nc">&nbsp;      int systolicVariation = random.nextInt(5) - 2; // -2, -1, 0, 1, or 2</b>
-<b class="nc">&nbsp;      int diastolicVariation = random.nextInt(5) - 2;</b>
-<b class="nc">&nbsp;      int newSystolicValue = lastSystolicValues[patientId] + systolicVariation;</b>
-<b class="nc">&nbsp;      int newDiastolicValue = lastDiastolicValues[patientId] + diastolicVariation;</b>
-&nbsp;      // Ensure the blood pressure stays within a realistic and safe range
-<b class="nc">&nbsp;      newSystolicValue = Math.min(Math.max(newSystolicValue, 90), 180);</b>
-<b class="nc">&nbsp;      newDiastolicValue = Math.min(Math.max(newDiastolicValue, 60), 120);</b>
-<b class="nc">&nbsp;      lastSystolicValues[patientId] = newSystolicValue;</b>
-<b class="nc">&nbsp;      lastDiastolicValues[patientId] = newDiastolicValue;</b>
-&nbsp;
-<b class="nc">&nbsp;      outputStrategy.output(patientId, System.currentTimeMillis(), &quot;SystolicPressure&quot;,</b>
-<b class="nc">&nbsp;          Double.toString(newSystolicValue));</b>
-<b class="nc">&nbsp;      outputStrategy.output(patientId, System.currentTimeMillis(), &quot;DiastolicPressure&quot;,</b>
-<b class="nc">&nbsp;          Double.toString(newDiastolicValue));</b>
-<b class="nc">&nbsp;    } catch (Exception e) {</b>
-<b class="nc">&nbsp;      System.err.println(</b>
-&nbsp;          &quot;An error occurred while generating blood pressure data for patient &quot; + patientId);
-<b class="nc">&nbsp;      e.printStackTrace(); // This will print the stack trace to help identify where the error occurred.</b>
-&nbsp;    }
+&nbsp;  public void setSeverity(AlertSeverity severity) {
+<b class="nc">&nbsp;    this.severity = severity;</b>
 &nbsp;  }
 &nbsp;}
 </code>
@@ -158,7 +112,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2024-05-24 18:07</div>
+    <div style="float:right;">generated on 2024-06-08 22:12</div>
 </div>
 </body>
 </html>

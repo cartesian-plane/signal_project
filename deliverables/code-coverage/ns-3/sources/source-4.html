@@ -5,7 +5,7 @@
 <html id="htmlId">
 <head>
   <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
-  <title>Coverage Report > BloodSaturationDataGenerator</title>
+  <title>Coverage Report > RepeatedAlertAlertDecorator</title>
   <style type="text/css">
     @import "../../css/coverage.css";
     @import "../../css/idea.min.css";
@@ -19,10 +19,10 @@
 <div class="breadCrumbs">
 Current scope:     <a href="../../index.html">all classes</a>
     <span class="separator">|</span>
-    <a href="../index.html">com.cardiogenerator.generators</a>
+    <a href="../index.html">com.alerts.decorator</a>
 </div>
 
-<h1>Coverage Summary for Class: BloodSaturationDataGenerator (com.cardiogenerator.generators)</h1>
+<h1>Coverage Summary for Class: RepeatedAlertAlertDecorator (com.alerts.decorator)</h1>
 
 <table class="coverageStats">
 <tr>
@@ -37,29 +37,17 @@ Current scope:     <a href="../../index.html">all classes</a>
 </th>
 <th class="coverageStat 
 ">
-  Branch, %
-</th>
-<th class="coverageStat 
-">
   Line, %
 </th>
 </tr>
 <tr>
-  <td class="name">BloodSaturationDataGenerator</td>
+  <td class="name">RepeatedAlertAlertDecorator</td>
 <td class="coverageStat">
   <span class="percent">
     0%
   </span>
   <span class="absValue">
     (0/1)
-  </span>
-</td>
-<td class="coverageStat">
-  <span class="percent">
-    0%
-  </span>
-  <span class="absValue">
-    (0/3)
   </span>
 </td>
 <td class="coverageStat">
@@ -75,7 +63,7 @@ Current scope:     <a href="../../index.html">all classes</a>
     0%
   </span>
   <span class="absValue">
-    (0/15)
+    (0/2)
   </span>
 </td>
 </tr>
@@ -87,64 +75,22 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 
 <pre>
-<code class="sourceCode" id="sourceCode">&nbsp;package com.cardiogenerator.generators;
+<code class="sourceCode" id="sourceCode">&nbsp;package com.alerts.decorator;
 &nbsp;
-&nbsp;import java.util.Random;
+&nbsp;import com.alerts.IAlert;
 &nbsp;
-&nbsp;import com.cardiogenerator.outputs.OutputStrategy;
+&nbsp;public class RepeatedAlertAlertDecorator extends BaseAlertDecorator {
+&nbsp;  private int repeatedCount;
 &nbsp;
-&nbsp;/**
-&nbsp; * BloodSaturationDataGenerator generates simulated blood saturation data for patients. It simulates
-&nbsp; * small fluctuations in blood saturation levels and ensures that the saturation stays within a
-&nbsp; * realistic and healthy range.
-&nbsp; */
-&nbsp;public class BloodSaturationDataGenerator implements PatientDataGenerator {
-&nbsp;
-<b class="nc">&nbsp;  private static final Random random = new Random();</b>
-&nbsp;
-&nbsp;  private int[] lastSaturationValues;
-&nbsp;
-&nbsp;  /**
-&nbsp;   * Constructs a BloodSaturationDataGenerator object with a specified number of patients.
-&nbsp;   *
-&nbsp;   * @param patientCount The total number of patients for which blood saturation data is generated.
-&nbsp;   */
-<b class="nc">&nbsp;  public BloodSaturationDataGenerator(int patientCount) {</b>
-<b class="nc">&nbsp;    lastSaturationValues = new int[patientCount + 1];</b>
-&nbsp;
-&nbsp;    // Initialize with baseline saturation values for each patient
-<b class="nc">&nbsp;    for (int i = 1; i &lt;= patientCount; i++) {</b>
-<b class="nc">&nbsp;      lastSaturationValues[i] =</b>
-<b class="nc">&nbsp;          95 + random.nextInt(6); // Initializes with a value between 95 and 100</b>
-&nbsp;    }
+&nbsp;  public RepeatedAlertAlertDecorator(IAlert alert) {
+<b class="nc">&nbsp;    super(alert);</b>
 &nbsp;  }
 &nbsp;
-&nbsp;  /**
-&nbsp;   * Generates blood saturation data for a specific patient and outputs it using the provided output
-&nbsp;   * strategy {@link OutputStrategy}.
-&nbsp;   *
-&nbsp;   * @param patientId      the ID of the patient for which the blood saturation data is generated
-&nbsp;   * @param outputStrategy the output strategy to use for displaying the saturation data
-&nbsp;   */
-&nbsp;  @Override
-&nbsp;  public void generate(int patientId, OutputStrategy outputStrategy) {
-&nbsp;    try {
-&nbsp;      // Simulate blood saturation values
-<b class="nc">&nbsp;      int variation = random.nextInt(3) - 1; // -1, 0, or 1 to simulate small fluctuations</b>
-<b class="nc">&nbsp;      int newSaturationValue = lastSaturationValues[patientId] + variation;</b>
-&nbsp;
-&nbsp;      // Ensure the saturation stays within a realistic and healthy range
-<b class="nc">&nbsp;      newSaturationValue = Math.min(Math.max(newSaturationValue, 90), 100);</b>
-<b class="nc">&nbsp;      lastSaturationValues[patientId] = newSaturationValue;</b>
-<b class="nc">&nbsp;      outputStrategy.output(patientId, System.currentTimeMillis(), &quot;Saturation&quot;,</b>
-<b class="nc">&nbsp;          Double.toString(newSaturationValue) + &quot;%&quot;);</b>
-<b class="nc">&nbsp;    } catch (Exception e) {</b>
-<b class="nc">&nbsp;      System.err.println(</b>
-&nbsp;          &quot;An error occurred while generating blood saturation data for patient &quot; + patientId);
-&nbsp;      // This will print the stack trace to help identify where the error occurred.
-<b class="nc">&nbsp;      e.printStackTrace();</b>
-&nbsp;    }
+&nbsp;  public void repeatAlert() {
+<b class="nc">&nbsp;    repeatedCount++;</b>
+&nbsp;    // magic logic to repeat an alert somehow???
 &nbsp;  }
+&nbsp;
 &nbsp;}
 </code>
 </pre>
@@ -169,7 +115,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2024-05-24 18:07</div>
+    <div style="float:right;">generated on 2024-06-08 22:12</div>
 </div>
 </body>
 </html>

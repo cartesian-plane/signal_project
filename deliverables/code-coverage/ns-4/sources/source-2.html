@@ -5,7 +5,7 @@
 <html id="htmlId">
 <head>
   <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
-  <title>Coverage Report > FileOutputStrategy</title>
+  <title>Coverage Report > HeartRateStrategy</title>
   <style type="text/css">
     @import "../../css/coverage.css";
     @import "../../css/idea.min.css";
@@ -19,10 +19,10 @@
 <div class="breadCrumbs">
 Current scope:     <a href="../../index.html">all classes</a>
     <span class="separator">|</span>
-    <a href="../index.html">com.cardiogenerator.outputs</a>
+    <a href="../index.html">com.alerts.strategies</a>
 </div>
 
-<h1>Coverage Summary for Class: FileOutputStrategy (com.cardiogenerator.outputs)</h1>
+<h1>Coverage Summary for Class: HeartRateStrategy (com.alerts.strategies)</h1>
 
 <table class="coverageStats">
 <tr>
@@ -37,33 +37,45 @@ Current scope:     <a href="../../index.html">all classes</a>
 </th>
 <th class="coverageStat 
 ">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
   Line, %
 </th>
 </tr>
 <tr>
-  <td class="name">FileOutputStrategy</td>
+  <td class="name">HeartRateStrategy</td>
 <td class="coverageStat">
   <span class="percent">
-    0%
+    100%
   </span>
   <span class="absValue">
-    (0/1)
+    (1/1)
   </span>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    0%
+    100%
   </span>
   <span class="absValue">
-    (0/3)
+    (3/3)
   </span>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    0%
+    75%
   </span>
   <span class="absValue">
-    (0/14)
+    (3/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    95.5%
+  </span>
+  <span class="absValue">
+    (21/22)
   </span>
 </td>
 </tr>
@@ -75,72 +87,51 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 
 <pre>
-<code class="sourceCode" id="sourceCode">&nbsp;package com.cardiogenerator.outputs;
-&nbsp;// Changed package name by removing underscore
+<code class="sourceCode" id="sourceCode">&nbsp;package com.alerts.strategies;
 &nbsp;
-&nbsp;import java.io.IOException;
-&nbsp;import java.io.PrintWriter;
-&nbsp;import java.nio.file.Files;
-&nbsp;import java.nio.file.Paths;
-&nbsp;import java.nio.file.StandardOpenOption;
-&nbsp;import java.util.concurrent.ConcurrentHashMap;
+&nbsp;import com.alerts.Alert;
+&nbsp;import com.alerts.alert_factory.AlertFactory;
+&nbsp;import com.alerts.alert_factory.BloodPressureAlertFactory;
+&nbsp;import com.alerts.alert_factory.ECGAlertFactory;
+&nbsp;import com.data_management.DataStorage;
+&nbsp;import com.data_management.Patient;
+&nbsp;import com.data_management.PatientRecord;
+&nbsp;import java.util.List;
 &nbsp;
-&nbsp;/**
-&nbsp; * Strategy used by the strategy pattern.
-&nbsp; */
-&nbsp;public class FileOutputStrategy implements OutputStrategy {
-&nbsp;
-&nbsp;  // Changed variable name to lowerCamelCase
-&nbsp;  private String baseDirectory;
-&nbsp;
-&nbsp;  // Changed variable name to lowerCamelCase
-<b class="nc">&nbsp;  public final ConcurrentHashMap&lt;String, String&gt; fileMap = new ConcurrentHashMap&lt;&gt;();</b>
-&nbsp;
-<b class="nc">&nbsp;  public FileOutputStrategy(String baseDirectory) {</b>
-&nbsp;
-<b class="nc">&nbsp;    this.baseDirectory = baseDirectory;</b>
-&nbsp;  }
-&nbsp;
-&nbsp;  /**
-&nbsp;   * Writes patient data to a file in the {@code baseDirectory} specified by the user.
-&nbsp;   *
-&nbsp;   * &lt;p&gt;If a directory cannot be created, it will throw an error.&lt;/p&gt;
-&nbsp;   *
-&nbsp;   * &lt;p&gt;Every type of data will be stored in its own file (i.e. cholesterol.txt).
-&nbsp;   * If such a file does not exist, one will be created.&lt;/p&gt;
-&nbsp;   *
-&nbsp;   * &lt;p&gt;The data format is: patientID, timestamp, Label, Data&lt;/p&gt;
-&nbsp;   *
-&nbsp;   * @param patientId the id of the patient
-&nbsp;   * @param timestamp the timestamp of the data
-&nbsp;   * @param label     the type of data (i.e. DiastolicPressure, Cholesterol)
-&nbsp;   * @param data      the data to be written (could come from any generator)
-&nbsp;   */
+<b class="fc">&nbsp;public class HeartRateStrategy implements AlertStrategy {</b>
+<b class="fc">&nbsp;  private static final AlertFactory FACTORY = new ECGAlertFactory();</b>
 &nbsp;  @Override
-&nbsp;  public void output(int patientId, long timestamp, String label, String data) {
-&nbsp;    try {
-&nbsp;      // Create the directory
-<b class="nc">&nbsp;      Files.createDirectories(Paths.get(baseDirectory));</b>
-<b class="nc">&nbsp;    } catch (IOException e) {</b>
-<b class="nc">&nbsp;      System.err.println(&quot;Error creating base directory: &quot; + e.getMessage());</b>
-&nbsp;      return;
-&nbsp;    }
-&nbsp;    // Set the filePath variable
-&nbsp;    // Changed variable name to lowerCamelCase
-&nbsp;    // Wrap line
-<b class="nc">&nbsp;    String filePath = fileMap.computeIfAbsent(label, k -&gt; Paths.get(baseDirectory, label</b>
-<b class="nc">&nbsp;        + &quot;.txt&quot;).toString());</b>
+&nbsp;  public Alert checkAlert(Patient patient) {
 &nbsp;
-&nbsp;    // Wrap line at 100 characters
-&nbsp;    // Write the data to the file
-<b class="nc">&nbsp;    try (PrintWriter out = new PrintWriter(</b>
-<b class="nc">&nbsp;        Files.newBufferedWriter(Paths.get(filePath), StandardOpenOption.CREATE,</b>
-&nbsp;            StandardOpenOption.APPEND))) {
-<b class="nc">&nbsp;      out.printf(&quot;Patient ID: %d, Timestamp: %d, Label: %s, Data: %s%n&quot;, patientId,</b>
-<b class="nc">&nbsp;          timestamp, label, data);</b>
-<b class="nc">&nbsp;    } catch (Exception e) {</b>
-<b class="nc">&nbsp;      System.err.println(&quot;Error writing to file &quot; + filePath + &quot;: &quot; + e.getMessage());</b>
+<b class="fc">&nbsp;    List&lt;PatientRecord&gt; ecgRecords = patient.getRecords(System.currentTimeMillis()</b>
+<b class="fc">&nbsp;            - (10 * 60 * 1000), System.currentTimeMillis())</b>
+<b class="fc">&nbsp;        .stream()</b>
+<b class="fc">&nbsp;        .filter(record -&gt; record.recordType().equals(&quot;ECG&quot;))</b>
+<b class="fc">&nbsp;        .toList();</b>
+&nbsp;
+&nbsp;
+<b class="fc">&nbsp;    double average = ecgRecords.stream()</b>
+<b class="fc">&nbsp;        .mapToDouble(PatientRecord::measurementValue)</b>
+<b class="fc">&nbsp;        .average()</b>
+<b class="fc">&nbsp;        .orElse(0);</b>
+&nbsp;
+<b class="fc">&nbsp;    double sumOfSquaredDifferences = ecgRecords.stream()</b>
+<b class="fc">&nbsp;        .mapToDouble(record -&gt; Math.pow(record.measurementValue() - average, 2))</b>
+<b class="fc">&nbsp;        .sum();</b>
+&nbsp;
+<b class="fc">&nbsp;    double variance = sumOfSquaredDifferences / ecgRecords.size();</b>
+&nbsp;
+<b class="fc">&nbsp;    double sd = Math.sqrt(variance);</b>
+&nbsp;
+<b class="fc">&nbsp;    double threshold = average + 2 * sd;</b>
+<b class="pc">&nbsp;    for (PatientRecord record : ecgRecords) {</b>
+<b class="fc">&nbsp;      if (Math.abs(record.measurementValue()) &gt; threshold) {</b>
+<b class="fc">&nbsp;        return FACTORY.createAlert(patient.getId(), &quot;ECG PEAK ALERT&quot;,</b>
+<b class="fc">&nbsp;            record.timestamp());</b>
+&nbsp;      }
 &nbsp;    }
+&nbsp;
+<b class="nc">&nbsp;    return null;</b>
 &nbsp;  }
 &nbsp;}
 </code>
@@ -166,7 +157,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2024-05-24 18:07</div>
+    <div style="float:right;">generated on 2024-06-08 22:12</div>
 </div>
 </body>
 </html>

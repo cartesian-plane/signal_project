@@ -5,7 +5,7 @@
 <html id="htmlId">
 <head>
   <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
-  <title>Coverage Report > OutputStrategy</title>
+  <title>Coverage Report > AlertStrategy</title>
   <style type="text/css">
     @import "../../css/coverage.css";
     @import "../../css/idea.min.css";
@@ -19,17 +19,17 @@
 <div class="breadCrumbs">
 Current scope:     <a href="../../index.html">all classes</a>
     <span class="separator">|</span>
-    <a href="../index.html">com.cardiogenerator.outputs</a>
+    <a href="../index.html">com.alerts.strategies</a>
 </div>
 
-<h1>Coverage Summary for Class: OutputStrategy (com.cardiogenerator.outputs)</h1>
+<h1>Coverage Summary for Class: AlertStrategy (com.alerts.strategies)</h1>
 
 <table class="coverageStats">
 <tr>
   <th class="name">Class</th>
 </tr>
 <tr>
-  <td class="name">OutputStrategy</td>
+  <td class="name">AlertStrategy</td>
 </tr>
 
 </table>
@@ -39,15 +39,14 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 
 <pre>
-<code class="sourceCode" id="sourceCode">&nbsp;package com.cardiogenerator.outputs;
+<code class="sourceCode" id="sourceCode">&nbsp;package com.alerts.strategies;
 &nbsp;
-&nbsp;/**
-&nbsp; * Specifies the methods that must be implemented by every OutputStrategy. If a new output strategy
-&nbsp; * is to be added, it must implement this interface.
-&nbsp; */
-&nbsp;public interface OutputStrategy {
+&nbsp;import com.alerts.Alert;
+&nbsp;import com.data_management.DataStorage;
+&nbsp;import com.data_management.Patient;
 &nbsp;
-&nbsp;  void output(int patientId, long timestamp, String label, String data);
+&nbsp;public interface AlertStrategy {
+&nbsp;  Alert checkAlert(Patient patient);
 &nbsp;}
 </code>
 </pre>
@@ -72,7 +71,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2024-05-24 18:07</div>
+    <div style="float:right;">generated on 2024-06-08 22:12</div>
 </div>
 </body>
 </html>

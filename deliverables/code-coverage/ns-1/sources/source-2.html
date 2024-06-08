@@ -64,18 +64,18 @@ Current scope:     <a href="../../index.html">all classes</a>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    67.5%
+    0%
   </span>
   <span class="absValue">
-    (54/80)
+    (0/12)
   </span>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    85.6%
+    42.9%
   </span>
   <span class="absValue">
-    (113/132)
+    (12/28)
   </span>
 </td>
 </tr>
@@ -89,6 +89,11 @@ Current scope:     <a href="../../index.html">all classes</a>
 <pre>
 <code class="sourceCode" id="sourceCode">&nbsp;package com.alerts;
 &nbsp;
+&nbsp;import com.alerts.strategies.AlertStrategy;
+&nbsp;import com.alerts.strategies.BloodPressureStrategy;
+&nbsp;import com.alerts.strategies.HeartRateStrategy;
+&nbsp;import com.alerts.strategies.HypotensiveHypoxemiaStrategy;
+&nbsp;import com.alerts.strategies.OxygenSaturationStrategy;
 &nbsp;import com.data_management.DataStorage;
 &nbsp;import com.data_management.Patient;
 &nbsp;import com.data_management.PatientRecord;
@@ -169,77 +174,8 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;   * @return {@code Alert} if necessary, {@code null} otherwise
 &nbsp;   */
 &nbsp;  public Alert bloodPressureAlert(Patient patient) {
-<b class="fc">&nbsp;    List&lt;PatientRecord&gt; records = dataStorage.getRecords(patient.getId(),</b>
-<b class="fc">&nbsp;        System.currentTimeMillis() - (10 * 60 * 1000), Long.MAX_VALUE);</b>
-&nbsp;
-<b class="fc">&nbsp;    for (int i = 2; i &lt; records.size(); i++) {</b>
-<b class="fc">&nbsp;      PatientRecord record1 = records.get(i - 2);</b>
-<b class="fc">&nbsp;      PatientRecord record2 = records.get(i - 1);</b>
-<b class="fc">&nbsp;      PatientRecord record3 = records.get(i);</b>
-&nbsp;
-&nbsp;      // Critical alert: diastolic &amp; systolic
-<b class="fc">&nbsp;      if (record1.recordType().equalsIgnoreCase(&quot;DiastolicPressure&quot;)) {</b>
-<b class="fc">&nbsp;        if (record1.measurementValue() &lt; 60) {</b>
-<b class="fc">&nbsp;          return new Alert(String.valueOf(patient.getId()),</b>
-<b class="fc">&nbsp;              &quot;CRITICAL: LOW DIASTOLIC PRESSURE&quot;, record1.timestamp());</b>
-<b class="fc">&nbsp;        } else if (record1.measurementValue() &gt; 120) {</b>
-<b class="fc">&nbsp;          return new Alert(String.valueOf(patient.getId()),</b>
-<b class="fc">&nbsp;              &quot;CRITICAL: HIGH DIASTOLIC PRESSURE&quot;, record1.timestamp());</b>
-&nbsp;        }
-<b class="pc">&nbsp;      } else if (record1.recordType().equalsIgnoreCase(&quot;SystolicPressure&quot;)) {</b>
-<b class="fc">&nbsp;        if (record1.measurementValue() &lt; 90) {</b>
-<b class="fc">&nbsp;          return new Alert(String.valueOf(patient.getId()),</b>
-<b class="fc">&nbsp;              &quot;CRITICAL: LOW SYSTOLIC PRESSURE&quot;, record1.timestamp());</b>
-<b class="fc">&nbsp;        } else if (record1.measurementValue() &gt; 180) {</b>
-<b class="fc">&nbsp;          return new Alert(String.valueOf(patient.getId()),</b>
-<b class="fc">&nbsp;              &quot;CRITICAL: HIGH SYSTOLIC PRESSURE&quot;, record1.timestamp());</b>
-&nbsp;        }
-&nbsp;      }
-&nbsp;
-&nbsp;      // Trend Alert: Diastolic Pressure
-<b class="fc">&nbsp;      if (record1.recordType().equals(&quot;DiastolicPressure&quot;) &amp;&amp;</b>
-<b class="pc">&nbsp;          record2.recordType().equals(&quot;DiastolicPressure&quot;) &amp;&amp;</b>
-<b class="pc">&nbsp;          record3.recordType().equals(&quot;DiastolicPressure&quot;)) {</b>
-<b class="fc">&nbsp;        double change1 = record2.measurementValue() - record1.measurementValue();</b>
-<b class="fc">&nbsp;        double change2 = record3.measurementValue() - record2.measurementValue();</b>
-&nbsp;
-&nbsp;        // use the Signum function to check if the change is strictly monotonous
-<b class="fc">&nbsp;        if (Math.abs(change1) &gt; 10 &amp;&amp;</b>
-<b class="fc">&nbsp;            Math.abs(change2) &gt; 10 &amp;&amp;</b>
-<b class="pc">&nbsp;            Math.signum(change1) == Math.signum(change2)) {</b>
-<b class="fc">&nbsp;          if (Math.signum(change1) &gt; 0) {</b>
-<b class="fc">&nbsp;            return new Alert(String.valueOf(patient.getId()),</b>
-<b class="fc">&nbsp;                &quot;TREND: INCREASING DIASTOLIC PRESSURE&quot;, record1.timestamp());</b>
-&nbsp;          } else {
-<b class="fc">&nbsp;            return new Alert(String.valueOf(patient.getId()),</b>
-<b class="fc">&nbsp;                &quot;TREND: DECREASING DIASTOLIC PRESSURE&quot;, record1.timestamp());</b>
-&nbsp;          }
-&nbsp;        }
-&nbsp;      }
-&nbsp;
-&nbsp;      // Trend Alert: Systolic Pressure
-<b class="fc">&nbsp;      if (record1.recordType().equals(&quot;SystolicPressure&quot;) &amp;&amp;</b>
-<b class="pc">&nbsp;          record2.recordType().equals(&quot;SystolicPressure&quot;) &amp;&amp;</b>
-<b class="pc">&nbsp;          record3.recordType().equals(&quot;SystolicPressure&quot;)) {</b>
-<b class="fc">&nbsp;        double change1 = record2.measurementValue() - record1.measurementValue();</b>
-<b class="fc">&nbsp;        double change2 = record3.measurementValue() - record2.measurementValue();</b>
-&nbsp;
-&nbsp;        // use the Signum function to check if the change is strictly monotonous
-<b class="fc">&nbsp;        if (Math.abs(change1) &gt; 10 &amp;&amp;</b>
-<b class="fc">&nbsp;            Math.abs(change2) &gt; 10 &amp;&amp;</b>
-<b class="pc">&nbsp;            Math.signum(change1) == Math.signum(change2)) {</b>
-<b class="fc">&nbsp;          if (Math.signum(change1) &gt; 0) {</b>
-<b class="fc">&nbsp;            return new Alert(String.valueOf(patient.getId()),</b>
-<b class="fc">&nbsp;                &quot;TREND: INCREASING SYSTOLIC PRESSURE&quot;, record1.timestamp());</b>
-&nbsp;          } else {
-<b class="fc">&nbsp;            return new Alert(String.valueOf(patient.getId()),</b>
-<b class="fc">&nbsp;                &quot;TREND: DECREASING SYSTOLIC PRESSURE&quot;, record1.timestamp());</b>
-&nbsp;          }
-&nbsp;        }
-&nbsp;      }
-&nbsp;    }
-&nbsp;
-<b class="fc">&nbsp;    return null;</b>
+<b class="fc">&nbsp;    AlertStrategy strategy = new BloodPressureStrategy();</b>
+<b class="fc">&nbsp;    return strategy.checkAlert(patient);</b>
 &nbsp;  }
 &nbsp;
 &nbsp;  /**
@@ -256,45 +192,8 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;   * are triggered within the specified time range
 &nbsp;   */
 &nbsp;  public Alert bloodSaturationAlert(Patient patient) {
-&nbsp;    // Get all blood oxygen saturation records for the patient
-<b class="fc">&nbsp;    List&lt;PatientRecord&gt; saturationRecords = dataStorage.getRecords(patient.getId(),</b>
-<b class="fc">&nbsp;            System.currentTimeMillis()</b>
-<b class="fc">&nbsp;            - (10 * 60 * 1000), System.currentTimeMillis() + 100)</b>
-<b class="fc">&nbsp;        .stream()</b>
-<b class="fc">&nbsp;        .filter(record -&gt; record.recordType().equalsIgnoreCase(&quot;Saturation&quot;))</b>
-<b class="fc">&nbsp;        .toList();</b>
-&nbsp;
-<b class="pc">&nbsp;    if (saturationRecords.isEmpty()) {</b>
-&nbsp;      // No records found within the last 10 minutes
-<b class="nc">&nbsp;      return null;</b>
-&nbsp;    }
-&nbsp;
-&nbsp;    // Get the latest blood saturation record
-<b class="fc">&nbsp;    PatientRecord latestRecord = saturationRecords.get(0);</b>
-&nbsp;
-&nbsp;    // Check if the latest saturation is below 92%
-<b class="fc">&nbsp;    if (latestRecord.measurementValue() &lt; 92) {</b>
-<b class="fc">&nbsp;      return new Alert(String.valueOf(patient.getId()), &quot;CRITICAL: LOW SATURATION&quot;,</b>
-<b class="fc">&nbsp;          latestRecord.timestamp());</b>
-&nbsp;    }
-&nbsp;
-&nbsp;    // Check for rapid drop within a 10-minute interval
-<b class="fc">&nbsp;    for (int i = 1; i &lt; saturationRecords.size(); i++) {</b>
-<b class="fc">&nbsp;      PatientRecord prevRecord = saturationRecords.get(i);</b>
-<b class="pc">&nbsp;      if ((latestRecord.timestamp() - prevRecord.timestamp()) &lt;= (10 * 60 * 1000)) {</b>
-<b class="fc">&nbsp;        double drop = latestRecord.measurementValue() - prevRecord.measurementValue();</b>
-<b class="fc">&nbsp;        if (drop &gt;= 5) {</b>
-<b class="fc">&nbsp;          return new Alert(String.valueOf(patient.getId()), &quot;TREND: RAPID SATURATION DROP&quot;,</b>
-<b class="fc">&nbsp;              latestRecord.timestamp());</b>
-&nbsp;        }
-&nbsp;      } else {
-&nbsp;        // No more records within the 10-minute interval
-&nbsp;        break;
-&nbsp;      }
-&nbsp;    }
-&nbsp;
-&nbsp;    // No alerts triggered
-<b class="fc">&nbsp;    return null;</b>
+<b class="fc">&nbsp;    AlertStrategy strategy = new OxygenSaturationStrategy();</b>
+<b class="fc">&nbsp;    return strategy.checkAlert(patient);</b>
 &nbsp;  }
 &nbsp;
 &nbsp;  /**
@@ -307,44 +206,8 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;   * @return {@code Alert} if necessary, {@code null} otherwise
 &nbsp;   */
 &nbsp;  public Alert hypotensiveHypoxemiaAlert(Patient patient) {
-<b class="fc">&nbsp;    List&lt;PatientRecord&gt; systolicPressureRecords = dataStorage.getRecords(patient.getId(),</b>
-<b class="fc">&nbsp;            System.currentTimeMillis() - (10 * 60 * 1000),</b>
-<b class="fc">&nbsp;            System.currentTimeMillis() + 1000)</b>
-<b class="fc">&nbsp;        .stream()</b>
-<b class="fc">&nbsp;        .filter(record -&gt; record.recordType().equalsIgnoreCase(&quot;SystolicPressure&quot;))</b>
-<b class="fc">&nbsp;        .toList();</b>
-&nbsp;
-<b class="fc">&nbsp;    List&lt;PatientRecord&gt; saturationRecords = dataStorage.getRecords(patient.getId(),</b>
-<b class="fc">&nbsp;            System.currentTimeMillis() - (10 * 60 * 1000),</b>
-<b class="fc">&nbsp;            System.currentTimeMillis() + 1000)</b>
-<b class="fc">&nbsp;        .stream()</b>
-<b class="fc">&nbsp;        .filter(record -&gt; record.recordType().equals(&quot;Saturation&quot;))</b>
-<b class="fc">&nbsp;        .toList();</b>
-&nbsp;
-<b class="fc">&nbsp;    boolean lowSystolicPressure = false;</b>
-<b class="fc">&nbsp;    boolean lowSpO2 = false;</b>
-&nbsp;
-<b class="fc">&nbsp;    System.out.println(systolicPressureRecords.size());</b>
-<b class="fc">&nbsp;    for (PatientRecord pressureRecord : systolicPressureRecords) {</b>
-<b class="fc">&nbsp;      if (pressureRecord.measurementValue() &lt; MIN_SYSTOLIC_PRESSURE) {</b>
-<b class="fc">&nbsp;        lowSystolicPressure = true;</b>
-&nbsp;      }
-&nbsp;
-&nbsp;    }
-&nbsp;
-<b class="pc">&nbsp;    for (PatientRecord oxygenRecord : saturationRecords) {</b>
-<b class="pc">&nbsp;      if (oxygenRecord.measurementValue() &lt; MIN_SPO2) {</b>
-<b class="fc">&nbsp;        lowSpO2 = true;</b>
-&nbsp;      }
-&nbsp;
-<b class="pc">&nbsp;      if (lowSpO2 &amp;&amp; lowSystolicPressure) {</b>
-<b class="fc">&nbsp;        return new Alert(String.valueOf(patient.getId()), &quot;CRITICAL: &quot;</b>
-<b class="fc">&nbsp;            + &quot;HYPOTENSIVE HYPOXEMIA&quot;, oxygenRecord.timestamp());</b>
-&nbsp;      }
-&nbsp;
-&nbsp;    }
-&nbsp;
-<b class="nc">&nbsp;    return null;</b>
+<b class="fc">&nbsp;    AlertStrategy strategy = new HypotensiveHypoxemiaStrategy();</b>
+<b class="fc">&nbsp;    return strategy.checkAlert(patient);</b>
 &nbsp;  }
 &nbsp;
 &nbsp;  /**
@@ -352,35 +215,8 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;   * @return
 &nbsp;   */
 &nbsp;  public Alert ecgAlert(Patient patient) {
-<b class="fc">&nbsp;    List&lt;PatientRecord&gt; ecgRecords = patient.getRecords(System.currentTimeMillis()</b>
-<b class="fc">&nbsp;            - (10 * 60 * 1000), System.currentTimeMillis())</b>
-<b class="fc">&nbsp;        .stream()</b>
-<b class="fc">&nbsp;        .filter(record -&gt; record.recordType().equals(&quot;ECG&quot;))</b>
-<b class="fc">&nbsp;        .toList();</b>
-&nbsp;
-&nbsp;
-<b class="fc">&nbsp;    double average = ecgRecords.stream()</b>
-<b class="fc">&nbsp;        .mapToDouble(PatientRecord::measurementValue)</b>
-<b class="fc">&nbsp;        .average()</b>
-<b class="fc">&nbsp;        .orElse(0);</b>
-&nbsp;
-<b class="fc">&nbsp;    double sumOfSquaredDifferences = ecgRecords.stream()</b>
-<b class="fc">&nbsp;        .mapToDouble(record -&gt; Math.pow(record.measurementValue() - average, 2))</b>
-<b class="fc">&nbsp;        .sum();</b>
-&nbsp;
-<b class="fc">&nbsp;    double variance = sumOfSquaredDifferences / ecgRecords.size();</b>
-&nbsp;
-<b class="fc">&nbsp;    double sd = Math.sqrt(variance);</b>
-&nbsp;
-<b class="fc">&nbsp;    double threshold = average + 2 * sd;</b>
-<b class="pc">&nbsp;    for (PatientRecord record : ecgRecords) {</b>
-<b class="fc">&nbsp;      if (Math.abs(record.measurementValue()) &gt; threshold) {</b>
-<b class="fc">&nbsp;        return new Alert(String.valueOf(patient.getId()), &quot;ECG PEAK ALERT&quot;,</b>
-<b class="fc">&nbsp;            record.timestamp());</b>
-&nbsp;      }
-&nbsp;    }
-&nbsp;
-<b class="nc">&nbsp;    return null;</b>
+<b class="fc">&nbsp;    AlertStrategy strategy = new HeartRateStrategy();</b>
+<b class="fc">&nbsp;    return strategy.checkAlert(patient);</b>
 &nbsp;  }
 &nbsp;
 &nbsp;  /**
@@ -443,7 +279,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2024-05-24 18:07</div>
+    <div style="float:right;">generated on 2024-06-08 22:12</div>
 </div>
 </body>
 </html>
