@@ -5,7 +5,7 @@
 <html id="htmlId">
 <head>
   <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
-  <title>Coverage Report > AlertGenerator</title>
+  <title>Coverage Report > AlertSeverity</title>
   <style type="text/css">
     @import "../../css/coverage.css";
     @import "../../css/idea.min.css";
@@ -19,10 +19,10 @@
 <div class="breadCrumbs">
 Current scope:     <a href="../../index.html">all classes</a>
     <span class="separator">|</span>
-    <a href="../index.html">com.cardiogenerator.generators</a>
+    <a href="../index.html">com.alerts.decorator</a>
 </div>
 
-<h1>Coverage Summary for Class: AlertGenerator (com.cardiogenerator.generators)</h1>
+<h1>Coverage Summary for Class: AlertSeverity (com.alerts.decorator)</h1>
 
 <table class="coverageStats">
 <tr>
@@ -37,15 +37,11 @@ Current scope:     <a href="../../index.html">all classes</a>
 </th>
 <th class="coverageStat 
 ">
-  Branch, %
-</th>
-<th class="coverageStat 
-">
   Line, %
 </th>
 </tr>
 <tr>
-  <td class="name">AlertGenerator</td>
+  <td class="name">AlertSeverity</td>
 <td class="coverageStat">
   <span class="percent">
     0%
@@ -59,7 +55,7 @@ Current scope:     <a href="../../index.html">all classes</a>
     0%
   </span>
   <span class="absValue">
-    (0/3)
+    (0/2)
   </span>
 </td>
 <td class="coverageStat">
@@ -67,15 +63,7 @@ Current scope:     <a href="../../index.html">all classes</a>
     0%
   </span>
   <span class="absValue">
-    (0/8)
-  </span>
-</td>
-<td class="coverageStat">
-  <span class="percent">
-    0%
-  </span>
-  <span class="absValue">
-    (0/16)
+    (0/5)
   </span>
 </td>
 </tr>
@@ -87,79 +75,13 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 
 <pre>
-<code class="sourceCode" id="sourceCode">&nbsp;package com.cardiogenerator.generators; // package name contained underscores. It cannot contain
-&nbsp;// underscores (5.2.1).
+<code class="sourceCode" id="sourceCode">&nbsp;package com.alerts.decorator;
 &nbsp;
-&nbsp;// The imports were separated by a space, which is wrong. All imports 
-&nbsp;// must have no spaces in-between (3.3.3).
-&nbsp;// Imports&#39; names are not in ASCII sort order. All imports&#39; names within a block
-&nbsp;// must be in ASCII sort order (3.3.3).
-&nbsp;
-&nbsp;import com.cardiogenerator.outputs.OutputStrategy;
-&nbsp;import java.util.Random;
-&nbsp;
-&nbsp;/**
-&nbsp; * AlertGenerator generates alert data for patients and handles the resolution of alerts based on a
-&nbsp; * probability distribution.
-&nbsp; * &lt;p&gt;
-&nbsp; * Indexing of patients starts from 1.
-&nbsp; */
-&nbsp;public class AlertGenerator implements PatientDataGenerator {
-&nbsp;
-<b class="nc">&nbsp;  public static final Random randomGenerator = new Random();</b>
-&nbsp;
-&nbsp;  // AlertStates was renamed to alertStates because local variable
-&nbsp;  // names should be written in lowerCamelCase (5.2.7)
-&nbsp;  private boolean[] alertStates; // false = resolved, true = pressed
-&nbsp;
-&nbsp;  /**
-&nbsp;   * Constructs an AlertGenerator object with a specified number of patients.
-&nbsp;   *
-&nbsp;   * @param patientCount The total number of patients for which alerts are to be generated.
-&nbsp;   */
-<b class="nc">&nbsp;  public AlertGenerator(int patientCount) {</b>
-<b class="nc">&nbsp;    alertStates = new boolean[patientCount + 1];</b>
-&nbsp;  }
-&nbsp;
-&nbsp;  /**
-&nbsp;   * Generates alert data for a specific patient and outputs it.
-&nbsp;   *
-&nbsp;   * @param patientId      the ID of the patient
-&nbsp;   * @param outputStrategy the output strategy to use for displaying the alert data
-&nbsp;   */
-&nbsp;  @Override
-&nbsp;  public void generate(int patientId, OutputStrategy outputStrategy) {
-&nbsp;    try {
-<b class="nc">&nbsp;      if (alertStates[patientId]) {</b>
-<b class="nc">&nbsp;        if (randomGenerator.nextDouble() &lt; 0.9) { // 90% chance to resolve</b>
-<b class="nc">&nbsp;          alertStates[patientId] = false;</b>
-&nbsp;          // Output the alert
-<b class="nc">&nbsp;          outputStrategy.output(patientId, System.currentTimeMillis(),</b>
-&nbsp;              &quot;Alert&quot;, &quot;resolved&quot;); // Line wrapped to not exceed 100 characters (4.4)
-&nbsp;        }
-&nbsp;      } else {
-&nbsp;        // Lambda was renamed to lambda because local variable names
-&nbsp;        // should be written in lowerCamelCase (5.2.7)
-<b class="nc">&nbsp;        double lambda = 0.1; // Average rate (alerts per period), adjust</b>
-&nbsp;        // based on desired frequency
-&nbsp;
-<b class="nc">&nbsp;        double p = -Math.expm1(-lambda); // Probability of at least one</b>
-&nbsp;        // alert in the period
-<b class="nc">&nbsp;        boolean alertTriggered = randomGenerator.nextDouble() &lt; p;</b>
-&nbsp;
-<b class="nc">&nbsp;        if (alertTriggered) {</b>
-<b class="nc">&nbsp;          alertStates[patientId] = true;</b>
-&nbsp;          // Output the alert
-<b class="nc">&nbsp;          outputStrategy.output(patientId, System.currentTimeMillis(),</b>
-&nbsp;              &quot;Alert&quot;, &quot;triggered&quot;); // Line wrapped to not exceed 100 characters (4.4)
-&nbsp;        }
-&nbsp;      }
-<b class="nc">&nbsp;    } catch (Exception e) {</b>
-<b class="nc">&nbsp;      System.err.println(&quot;An error occurred while generating alert data for patient &quot;</b>
-&nbsp;          + patientId); // Line wrapped to not exceed 100 characters (4.4)
-<b class="nc">&nbsp;      e.printStackTrace();</b>
-&nbsp;    }
-&nbsp;  }
+<b class="nc">&nbsp;public enum AlertSeverity {</b>
+<b class="nc">&nbsp;  LOW,</b>
+<b class="nc">&nbsp;  MEDIUM,</b>
+<b class="nc">&nbsp;  HIGH,</b>
+<b class="nc">&nbsp;  CRITICAL</b>
 &nbsp;}
 </code>
 </pre>
@@ -184,7 +106,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2024-05-24 18:07</div>
+    <div style="float:right;">generated on 2024-06-08 22:12</div>
 </div>
 </body>
 </html>
