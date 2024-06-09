@@ -57,8 +57,8 @@ public class Reader implements DataReader {
         String measurementValueStr = parts[3].split(": ")[1]
             .replace("%", "").replace("&", "");
         double measurementValue = Double.parseDouble(measurementValueStr);
-
-        dataStorage.addPatientData(patientId, timestamp, label, measurementValue);
+        var record = new PatientRecord(patientId, measurementValue, label, timestamp);
+        dataStorage.addPatientRecord(record);
       }
     }
   }

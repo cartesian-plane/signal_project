@@ -49,7 +49,6 @@ public class Patient {
    * @param record containing all the necessary information
    */
   public void addPatientData(PatientRecord record) {
-    //TODO make this method replace the addRecord(), if the time allows for refactoring
     this.patientRecords.add(record);
   }
 

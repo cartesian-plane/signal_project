@@ -88,7 +88,6 @@ public class DataStorage {
    * @param record containing the necessary information
    */
   public void addPatientRecord(PatientRecord record) {
-    //TODO make this method replace the addPatientData(), if the time allows for refactoring
     int patientId = record.patientId();
     Patient patient = patientMap.computeIfAbsent(patientId, Patient::new);
     patient.addPatientData(record);
